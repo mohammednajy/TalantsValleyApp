@@ -6,5 +6,7 @@ class ScreenName {
   static const String otpEmailScreen = "otpemail_screen";
   static const String newPasswordScreen = "newPassword_screen";
   static const String passwordResetDoneScreen="PasswordReset_done_screen";
+  static const String verificationScreen = "verification_screen";
+
   static const String homeScreen = "home_screen";
 }

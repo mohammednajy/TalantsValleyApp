@@ -10,6 +10,7 @@ import 'package:tanlants_valley_application/view/screens/auth/signUp_screen.dart
 import 'package:tanlants_valley_application/view/screens/home/home_screen.dart';
 import 'package:tanlants_valley_application/view/screens/splash/splash_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:tanlants_valley_application/view/screens/verification/verification_screen.dart';
 
 import '../data/controller/form_validation.dart';
 
@@ -55,6 +56,9 @@ Route onGenerateRoute(RouteSettings settings) {
       break;
     case ScreenName.passwordResetDoneScreen:
       result = const PasswordResetDoneScreen();
+      break;
+      case ScreenName.verificationScreen:
+      result = const VerificationScreen();
       break;
     case ScreenName.homeScreen:
       result = const HomeScreen();

@@ -9,8 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:device_preview/device_preview.dart';
 // ignore: depend_on_referenced_packages
 import 'package:provider/provider.dart';
-import 'package:tanlants_valley_application/view/screens/home/text_textFiled%20copy.dart';
-import 'package:tanlants_valley_application/view/screens/home/text_textFiled.dart';
+import 'package:tanlants_valley_application/view/screens/verification/verification_screen.dart';
 
 void main(List<String> args) {
   runApp(MultiProvider(providers: [
@@ -34,10 +33,10 @@ class TalantsValleyApp extends StatelessWidget {
         builder: (context, child) => MaterialApp(
           scaffoldMessengerKey: UtilsConfig.scaffoldKey,
           debugShowCheckedModeBanner: false,
-          initialRoute: ScreenName.loginScreen,
+          initialRoute: ScreenName.verificationScreen,
           onGenerateRoute: onGenerateRoute,
           navigatorKey: AppRouter.navigationKey,
-          // home: TextTextForm1(),
+          // home: VerificationScreen(),
           theme: lightTheme,
         ),
       ),
