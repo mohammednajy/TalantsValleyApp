@@ -6,7 +6,6 @@ import 'package:tanlants_valley_application/view/shared/buttons/button_widget.da
 import 'package:provider/provider.dart';
 import '../../../../data/controller/auth_controller.dart';
 import '../../../../router/router.dart';
-import '../../../../router/routes_name.dart';
 import '../../../../utils/constant_utils.dart';
 import '../../../shared/auth_shared/otp_widget.dart';
 
@@ -39,7 +38,8 @@ class _OtpEmailScreenState extends State<OtpEmailScreen> {
     _secoundControllerField.dispose();
     _thirdControllerField.dispose();
     _fourthControllerField.dispose();
-
+    _fifthControllerField.dispose();
+    _sixthControllerField.dispose();
     super.dispose();
   }
 
@@ -51,7 +51,6 @@ class _OtpEmailScreenState extends State<OtpEmailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.id.toString() + widget.email.toString());
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),

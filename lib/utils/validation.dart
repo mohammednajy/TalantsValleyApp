@@ -108,3 +108,11 @@ String? confirmPassword(String? confirmPassword) {
   }
   return result;
 }
+
+String? isValidId(String? value) {
+  String? result;
+  if (value == null || value.isEmpty) {
+    result = '';
+  }
+  return result;
+}

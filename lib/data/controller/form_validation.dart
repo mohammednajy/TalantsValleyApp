@@ -8,7 +8,8 @@ class FormValidation extends ChangeNotifier {
     "firsName": null,
     "lastName": null,
     "phoneNumber": null,
-    "confirmPassword": null
+    "confirmPassword": null,
+    
   };
 
   setErrorMessage(String key, String? value) {

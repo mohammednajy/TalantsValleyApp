@@ -2,9 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tanlants_valley_application/data/controller/form_validation.dart';
+import 'package:tanlants_valley_application/data/models/user_model.dart';
 import 'package:tanlants_valley_application/data/network/api/auth_api.dart';
 import 'package:tanlants_valley_application/router/router.dart';
 import 'package:tanlants_valley_application/router/routes_name.dart';
+import 'package:tanlants_valley_application/storage/sherd_perf.dart';
 import 'package:tanlants_valley_application/utils/helper.dart';
 import 'package:tanlants_valley_application/view/screens/auth/forget_screen/new_password_screen.dart';
 import 'package:tanlants_valley_application/view/screens/auth/forget_screen/otp_email_screen.dart';
@@ -23,7 +25,10 @@ class AuthController extends ChangeNotifier {
       final Response response =
           await AuthApi.login(email: email, password: password);
       if (response.data["statusCode"] == 200) {
-        AppRouter.goAndRemove(ScreenName.homeScreen);
+        UtilsConfig.showSnackBarMessage(
+            message: response.data["message"], status: true);
+        SharedPrefController().save(UserModel.fromJson(response.data["data"]));
+        AppRouter.goAndRemove(ScreenName.verificationScreen);
       }
     }
   }
@@ -64,7 +69,7 @@ class AuthController extends ChangeNotifier {
   sendOtpCode({required String id, required String code}) async {
     final Response response = await AuthApi.sendOtpCode(id: id, code: code);
     if (response.data["statusCode"] == 200) {
-      print('ttttt');
+     
       Navigator.push(
         AppRouter.navigationKey.currentContext!,
         MaterialPageRoute(

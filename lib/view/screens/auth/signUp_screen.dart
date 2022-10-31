@@ -25,7 +25,7 @@ class SignUpScreen extends StatelessWidget {
               addVerticalSpace(60),
               const AuthHeaderWidget(heightSpace: 32, headTitle: 'Sign Up'),
               addVerticalSpace(39),
-              SignUpFormWidget(),
+              const SignUpFormWidget(),
               addVerticalSpace(30),
               RichTextWidget(
                 left: 'Already have an account?',

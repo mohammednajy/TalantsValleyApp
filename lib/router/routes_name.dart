@@ -5,8 +5,11 @@ class ScreenName {
   static const String forgetScreen = "forget_screen";
   static const String otpEmailScreen = "otpemail_screen";
   static const String newPasswordScreen = "newPassword_screen";
-  static const String passwordResetDoneScreen="PasswordReset_done_screen";
+  static const String passwordResetDoneScreen = "PasswordReset_done_screen";
   static const String verificationScreen = "verification_screen";
+  static const String emailVerificationScreen = "email_verification_screen";
+  static const String mobileVerificationScreen = "mobile_verification_screen";
+  static const String idVerificationScreen = "id_verification_screen";
 
   static const String homeScreen = "home_screen";
 }

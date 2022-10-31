@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tanlants_valley_application/data/controller/counrty_controller.dart';
+import 'package:tanlants_valley_application/data/controller/verification_controller.dart';
 import 'package:tanlants_valley_application/router/routes_name.dart';
 import 'package:tanlants_valley_application/view/screens/auth/forget_screen/forget_screen.dart';
 import 'package:tanlants_valley_application/view/screens/auth/forget_screen/new_password_screen.dart';
@@ -10,6 +11,9 @@ import 'package:tanlants_valley_application/view/screens/auth/signUp_screen.dart
 import 'package:tanlants_valley_application/view/screens/home/home_screen.dart';
 import 'package:tanlants_valley_application/view/screens/splash/splash_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:tanlants_valley_application/view/screens/verification/email_verification/email_verification_screen.dart';
+import 'package:tanlants_valley_application/view/screens/verification/id_verification/id_verification_screen.dart';
+import 'package:tanlants_valley_application/view/screens/verification/mobile_verification/mobile_verification_screen.dart';
 import 'package:tanlants_valley_application/view/screens/verification/verification_screen.dart';
 
 import '../data/controller/form_validation.dart';
@@ -57,8 +61,25 @@ Route onGenerateRoute(RouteSettings settings) {
     case ScreenName.passwordResetDoneScreen:
       result = const PasswordResetDoneScreen();
       break;
-      case ScreenName.verificationScreen:
-      result = const VerificationScreen();
+    case ScreenName.verificationScreen:
+      result = ChangeNotifierProvider(
+          create: (context) => VerificationController(),
+          child: const VerificationScreen());
+      break;
+    case ScreenName.emailVerificationScreen:
+      result = ChangeNotifierProvider(
+          create: (context) => VerificationController(),
+          child: const EmailVerificationScreen());
+      break;
+    case ScreenName.mobileVerificationScreen:
+      result = ChangeNotifierProvider(
+          create: (context) => VerificationController(),
+          child: const MobileVerificationScreen());
+      break;
+       case ScreenName.idVerificationScreen:
+      result = ChangeNotifierProvider(
+          create: (context) => VerificationController(),
+          child: const IdVerificationScreen());
       break;
     case ScreenName.homeScreen:
       result = const HomeScreen();

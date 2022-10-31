@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tanlants_valley_application/data/controller/auth_controller.dart';
+import 'package:tanlants_valley_application/data/controller/form_validation.dart';
 import 'package:tanlants_valley_application/router/route_genarator.dart';
 import 'package:tanlants_valley_application/router/router.dart';
 import 'package:tanlants_valley_application/router/routes_name.dart';
+import 'package:tanlants_valley_application/storage/sherd_perf.dart';
 import 'package:tanlants_valley_application/utils/helper.dart';
 import 'package:tanlants_valley_application/utils/theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,10 +13,15 @@ import 'package:device_preview/device_preview.dart';
 import 'package:provider/provider.dart';
 import 'package:tanlants_valley_application/view/screens/verification/verification_screen.dart';
 
-void main(List<String> args) {
+void main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPrefController().init();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
       create: (context) => AuthController(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => FormValidation(),
     )
   ], child: const TalantsValleyApp()));
 }
@@ -33,7 +40,7 @@ class TalantsValleyApp extends StatelessWidget {
         builder: (context, child) => MaterialApp(
           scaffoldMessengerKey: UtilsConfig.scaffoldKey,
           debugShowCheckedModeBanner: false,
-          initialRoute: ScreenName.verificationScreen,
+          initialRoute: ScreenName.splashScreen,
           onGenerateRoute: onGenerateRoute,
           navigatorKey: AppRouter.navigationKey,
           // home: VerificationScreen(),

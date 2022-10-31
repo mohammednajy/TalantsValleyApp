@@ -5,6 +5,8 @@ import 'package:tanlants_valley_application/router/routes_name.dart';
 import 'package:tanlants_valley_application/utils/constant_utils.dart';
 import 'package:tanlants_valley_application/view/screens/auth/login_screen.dart';
 
+import '../../../storage/sherd_perf.dart';
+
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
@@ -12,7 +14,9 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Future.delayed(
       const Duration(seconds: 2),
-      () => AppRouter.goAndRemove(ScreenName.loginScreen),
+      () => SharedPrefController().getLogedin()
+          ? AppRouter.goAndRemove(ScreenName.verificationScreen)
+          : AppRouter.goAndRemove(ScreenName.loginScreen),
     );
     return Scaffold(
       body: Center(
