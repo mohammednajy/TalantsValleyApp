@@ -1,165 +1,313 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:tanlants_valley_application/utils/constant_utils.dart';
-// import '../../../utils/validation.dart';
-// import 'package:provider/provider.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-// void main(List<String> args) {
-//   runApp(ChangeNotifierProvider(
-//       create: (context) => FormValidation(), child: TextTextForm1()));
-// }
+void main(List<String> args) {
+  runApp(FilePickerDemo());
+}
 
-// class TextTextForm1 extends StatefulWidget {
-//   const TextTextForm1({super.key});
+class FilePickerDemo extends StatefulWidget {
+  @override
+  _FilePickerDemoState createState() => _FilePickerDemoState();
+}
 
-//   @override
-//   State<TextTextForm1> createState() => _TextTextFormState();
-// }
+class _FilePickerDemoState extends State<FilePickerDemo> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+  String? _fileName;
+  String? _saveAsFileName;
+  List<PlatformFile>? _paths;
+  String? _directoryPath;
+  String? _extension;
+  bool _isLoading = false;
+  bool _userAborted = false;
+  bool _multiPick = false;
+  FileType _pickingType = FileType.any;
+  TextEditingController _controller = TextEditingController();
 
-// class _TextTextFormState extends State<TextTextForm1> {
-//   TextEditingController counteryController = TextEditingController();
-//   TextEditingController phoneController = TextEditingController();
 
-//   FocusNode countyFoucse = FocusNode();
-//   FocusNode phoneFoucse = FocusNode();
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() => _extension = _controller.text);
+  }
 
-//   GlobalKey<FormState> formKey = GlobalKey();
-//   bool visisble = false;
+  void _pickFiles() async {
+    _resetState();
+    try {
+      _directoryPath = null;
+      _paths = (await FilePicker.platform.pickFiles(
+        type: _pickingType,
+        allowMultiple: _multiPick,
+        onFileLoading: (FilePickerStatus status) => print(status),
+        allowedExtensions: (_extension?.isNotEmpty ?? false)
+            ? _extension?.replaceAll(' ', '').split(',')
+            : null,
+      ))
+          ?.files;
+    } on PlatformException catch (e) {
+      _logException('Unsupported operation' + e.toString());
+    } catch (e) {
+      _logException(e.toString());
+    }
+    if (!mounted) return;
+    setState(() {
+      _isLoading = false;
+      _fileName =
+          _paths != null ? _paths!.map((e) => e.name).toString() : '...';
+      _userAborted = _paths == null;
+    });
+  }
 
-//   // String? Counrtyerror;
-//   // String? Phoneerror;
+    void _clearCachedFiles() async {
+    _resetState();
+    try {
+      bool? result = await FilePicker.platform.clearTemporaryFiles();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: result! ? Colors.green : Colors.red,
+          content: Text((result
+              ? 'Temporary files removed with success.'
+              : 'Failed to clean temporary files')),
+        ),
+      );
+    } on PlatformException catch (e) {
+      _logException('Unsupported operation' + e.toString());
+    } catch (e) {
+      _logException(e.toString());
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: Scaffold(
-//         body: Consumer<FormValidation>(
-//           builder: (context, errorProvider, child) => Form(
-//             key: formKey,
-//             child: Column(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 // TextFormFieldWidget(
-//                 //   controller: counteryController,
-//                 //   title: 'email', focusNode:countyFoucse , messageKey: "email", messageValue: counteryController.text.isValidEmail),
-//                 // TextFormFieldWidget(
-//                 //   controller: phoneController,
-//                 //     title: 'password',
-//                 //     focusNode: phoneFoucse,
-//                 //     messageKey: "password",
-//                 //     messageValue:  phoneController.text.isValidPassword),
 
-//                 CustomTextField(
-//                     controller: counteryController,
-//                     focusNode: countyFoucse,
-//                     messageKey: "email",
-//                     messageValue: counteryController.text.isValidEmail),
-//                 CustomTextField(
-//                     controller: phoneController,
-//                     focusNode: phoneFoucse,
-//                     messageKey: "password",
-//                     messageValue: phoneController.text.isValidPassword),
-//                 // TextFormField(
-//                 //   controller: counteryController,
-//                 //   focusNode: countyFoucse,
-//                 //   validator: (value) {
-//                 //     return value!.isValidEmail;
-//                 //   },
-//                 //   onChanged: (value) {
-//                 //     countyFoucse.addListener(() {
-//                 //       if (!countyFoucse.hasFocus) {
-//                 //         errorProvider.setErrorMessage(
-//                 //             "email", value.isValidEmail);
-//                 //         // setState(() {
-//                 //         //   Counrtyerror = value.isValidEmail;
-//                 //         // });
-//                 //       }
-//                 //       if (countyFoucse.hasFocus) {
-//                 //         errorProvider.setErrorMessage("email", null);
-//                 //         // setState(() {
-//                 //         //   Counrtyerror = null;
-//                 //         // });
-//                 //       }
-//                 //     });
-//                 //   },
-//                 //   decoration: InputDecoration(
-//                 //     hintText: 'country',
-//                 //     errorText: errorProvider.errorMessages["email"],
-//                 //   ),
-//                 // ),
-//                 // addVerticalSpace(20),
+  void _selectFolder() async {
+    _resetState();
+    try {
+      String? path = await FilePicker.platform.getDirectoryPath();
+      setState(() {
+        _directoryPath = path;
+        _userAborted = path == null;
+      });
+    } on PlatformException catch (e) {
+      _logException('Unsupported operation' + e.toString());
+    } catch (e) {
+      _logException(e.toString());
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
 
-//                 // addVerticalSpace(20),
-//                 ElevatedButton(
-//                     onPressed: () {
-//                       formKey.currentState!.validate();
-//                     },
-//                     child: Text('send'))
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+  Future<void> _saveFile() async {
+    _resetState();
+    try {
+      String? fileName = await FilePicker.platform.saveFile(
+        allowedExtensions: (_extension?.isNotEmpty ?? false)
+            ? _extension?.replaceAll(' ', '').split(',')
+            : null,
+        type: _pickingType,
+      );
+      setState(() {
+        _saveAsFileName = fileName;
+        _userAborted = fileName == null;
+      });
+    } on PlatformException catch (e) {
+      _logException('Unsupported operation' + e.toString());
+    } catch (e) {
+      _logException(e.toString());
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
 
-// class FormValidation extends ChangeNotifier {
-//   Map<String, String?> errorMessages = {
-//     "email": null,
-//     "password": null,
-//   };
-//   setErrorMessage(String key, String? value) {
-//     errorMessages[key] = value;
-//     notifyListeners();
-//   }
-// }
+  void _logException(String message) {
+    print(message);
+    _scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
+    _scaffoldMessengerKey.currentState?.showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
 
-// class CustomTextField extends StatelessWidget {
-//   const CustomTextField({
-//     super.key,
-//     required this.controller,
-//     required this.focusNode,
-//     required this.messageKey,
-//     required this.messageValue,
-//   });
-//   final TextEditingController controller;
-//   final FocusNode focusNode;
-//   final String? messageValue;
-//   final String messageKey;
-//   @override
-//   Widget build(BuildContext context) {
-//     return Consumer<FormValidation>(
-//       builder: (context, errorProvider, child) => TextFormField(
-//         controller: controller,
-//         focusNode: focusNode,
-//         validator: (value) {
-//           return value!.isValidEmail;
-//         },
-//         onChanged: (value) {
-//           focusNode.addListener(() {
-//             if (!focusNode.hasFocus) {
-//               print('out');
-//               errorProvider.setErrorMessage(messageKey, messageValue);
-//               // setState(() {
-//               //   Counrtyerror = value.isValidEmail;
-//               // });
-//             }
-//             if (focusNode.hasFocus) {
-//               print('in');
+  void _resetState() {
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _isLoading = true;
+      _directoryPath = null;
+      _fileName = null;
+      _paths = null;
+      _saveAsFileName = null;
+      _userAborted = false;
+    });
+  }
 
-//               errorProvider.setErrorMessage(messageKey, null);
-//               // setState(() {
-//               //   Counrtyerror = null;
-//               // });
-//             }
-//           });
-//         },
-//         decoration: InputDecoration(
-//           hintText: 'country',
-//           errorText: errorProvider.errorMessages[messageKey],
-//         ),
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      scaffoldMessengerKey: _scaffoldMessengerKey,
+      home: Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: const Text('File Picker example app'),
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: DropdownButton<FileType>(
+                        hint: const Text('LOAD PATH FROM'),
+                        value: _pickingType,
+                        items: FileType.values
+                            .map((fileType) => DropdownMenuItem<FileType>(
+                                  child: Text(fileType.toString()),
+                                  value: fileType,
+                                ))
+                            .toList(),
+                        onChanged: (value) => setState(() {
+                              _pickingType = value!;
+                              if (_pickingType != FileType.custom) {
+                                _controller.text = _extension = '';
+                              }
+                            })),
+                  ),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints.tightFor(width: 100.0),
+                    child: _pickingType == FileType.custom
+                        ? TextFormField(
+                            maxLength: 15,
+                            autovalidateMode: AutovalidateMode.always,
+                            controller: _controller,
+                            decoration: InputDecoration(
+                              labelText: 'File extension',
+                            ),
+                            keyboardType: TextInputType.text,
+                            textCapitalization: TextCapitalization.none,
+                          )
+                        : const SizedBox(),
+                  ),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints.tightFor(width: 200.0),
+                    child: SwitchListTile.adaptive(
+                      title: Text(
+                        'Pick multiple files',
+                        textAlign: TextAlign.right,
+                      ),
+                      onChanged: (bool value) =>
+                          setState(() => _multiPick = value),
+                      value: _multiPick,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                    child: Column(
+                      children: <Widget>[
+                        ElevatedButton(
+                          onPressed: () => _pickFiles(),
+                          child: Text(_multiPick ? 'Pick files' : 'Pick file'),
+                        ),
+                        SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: () => _selectFolder(),
+                          child: const Text('Pick folder'),
+                        ),
+                        SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: () => _saveFile(),
+                          child: const Text('Save file'),
+                        ),
+                        SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: () => _clearCachedFiles(),
+                          child: const Text('Clear temporary files'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Builder(
+                    builder: (BuildContext context) => _isLoading
+                        ? Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: const CircularProgressIndicator(),
+                          )
+                        : _userAborted
+                            ? Padding(
+                                padding: const EdgeInsets.only(bottom: 10.0),
+                                child: const Text(
+                                  'User has aborted the dialog',
+                                ),
+                              )
+                            : _directoryPath != null
+                                ? ListTile(
+                                    title: const Text('Directory path'),
+                                    subtitle: Text(_directoryPath!),
+                                  )
+                                : _paths != null
+                                    ? Container(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 30.0),
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.50,
+                                        child: Scrollbar(
+                                            child: ListView.separated(
+                                          itemCount: _paths != null &&
+                                                  _paths!.isNotEmpty
+                                              ? _paths!.length
+                                              : 1,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            final bool isMultiPath =
+                                                _paths != null &&
+                                                    _paths!.isNotEmpty;
+                                            final String name =
+                                                'File $index: ' +
+                                                    (isMultiPath
+                                                        ? _paths!
+                                                            .map((e) => e.name)
+                                                            .toList()[index]
+                                                        : _fileName ?? '...');
+                                            final path = kIsWeb
+                                                ? null
+                                                : _paths!
+                                                    .map((e) => e.path)
+                                                    .toList()[index]
+                                                    .toString();
+
+                                            return ListTile(
+                                              title: Text(
+                                                name,
+                                              ),
+                                              subtitle: Text(path ?? ''),
+                                            );
+                                          },
+                                          separatorBuilder:
+                                              (BuildContext context,
+                                                      int index) =>
+                                                  const Divider(),
+                                        )),
+                                      )
+                                    : _saveAsFileName != null
+                                        ? ListTile(
+                                            title: const Text('Save file'),
+                                            subtitle: Text(_saveAsFileName!),
+                                          )
+                                        : const SizedBox(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

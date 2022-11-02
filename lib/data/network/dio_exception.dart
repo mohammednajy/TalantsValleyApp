@@ -57,7 +57,8 @@ class DioExceptions implements Exception {
         return 'Bad gateway';
 
       default:
-        return 'Oops something went wrong';
+        print(statusCode);
+        return 'Oops something went wrong $statusCode';
     }
   }
 
@@ -68,6 +69,4 @@ class DioExceptions implements Exception {
     UtilsConfig.showSnackBarMessage(
         message: fromDioError(error), status: false);
   }
-
-  
 }

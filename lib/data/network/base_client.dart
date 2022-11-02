@@ -28,4 +28,13 @@ class BaseClientHelper {
     return await dio.post(path,
         data: data, queryParameters: queryParameters, options: options);
   }
+
+  Future<dynamic> get(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+  }) async {
+    return await dio.get(path,
+        queryParameters: queryParameters, options: options);
+  }
 }

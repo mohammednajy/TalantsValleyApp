@@ -1,12 +1,15 @@
 import 'package:dio/dio.dart';
+import 'package:tanlants_valley_application/data/models/user_model.dart';
 import 'package:tanlants_valley_application/data/network/base_client.dart';
 import 'package:tanlants_valley_application/data/network/endpoints.dart';
+import 'package:tanlants_valley_application/storage/sherd_perf.dart';
 
 class AuthApi {
   AuthApi._();
 
   static Future<Response> login(
       {required String email, required String password}) async {
+    SharedPrefController().setLogedin();
     return await BaseClientHelper()
         .post(EndPoints.loginUrl, data: {"email": email, "password": password});
   }
@@ -49,4 +52,11 @@ class AuthApi {
       },
     );
   }
+
+  static Future<Response> getUserInfo({required String token}) async {
+    return await BaseClientHelper().get(EndPoints.userInfo,
+        options: Options(headers: {"Authorization": "Bearer $token"}));
+  }
+
+
 }

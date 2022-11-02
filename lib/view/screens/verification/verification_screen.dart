@@ -8,8 +8,20 @@ import 'package:tanlants_valley_application/utils/constant_utils.dart';
 import 'package:tanlants_valley_application/view/shared/buttons/button_widget.dart';
 import 'package:provider/provider.dart';
 
-class VerificationScreen extends StatelessWidget {
+class VerificationScreen extends StatefulWidget {
   const VerificationScreen({super.key});
+
+  @override
+  State<VerificationScreen> createState() => _VerificationScreenState();
+}
+
+class _VerificationScreenState extends State<VerificationScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // context.read<VerificationController>().setIdVerificationState();
+    context.read<VerificationController>().setIdVerificationState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,12 +134,25 @@ class VerificationScreen extends StatelessWidget {
               onPressed: () {
                 AppRouter.goTo(ScreenName.idVerificationScreen);
               },
+              rejectedState: context.watch<VerificationController>().rejected,
+              pendingState: context.watch<VerificationController>().pending,
+              //
+              idAddressVerified: !(SharedPrefController()
+                      .getUser()
+                      .userInfo
+                      .verifiedId["status"] ==
+                  "approved"),
             ),
             addVerticalSpace(10),
             VerificationCardWidget(
               title: 'Address Verification',
               subtitle: 'Phone,Electricity,Water Bill-Bank statement',
-              onPressed: () {},
+              onPressed: () {
+                
+              },
+              rejectedState: false,
+              pendingState: false,
+              idAddressVerified: true,
             ),
             addVerticalSpace(60),
             ElevatedButtonWithDisapleWidget(
@@ -135,7 +160,8 @@ class VerificationScreen extends StatelessWidget {
                   (SharedPrefController().getUser().userInfo.verifiedEmail &&
                       SharedPrefController().getUser().userInfo.verifiedMobile),
               onPressed: () {
-                AppRouter.goAndRemove(ScreenName.homeScreen);
+                context.read<VerificationController>().setIdVerificationState();
+                AppRouter.goTo(ScreenName.homeScreen);
               },
               loaderVisisble: false,
             ),
@@ -162,7 +188,7 @@ class ElevatedButtonWithDisapleWidget extends StatelessWidget {
     return Visibility(
       visible: visisble,
       replacement: Container(
-        margin: const EdgeInsets.only(top: 3),
+        margin: const EdgeInsets.only(top: 5),
         padding: const EdgeInsets.only(bottom: 3),
         height: 44.h,
         alignment: Alignment.center,
@@ -193,12 +219,18 @@ class VerificationCardWidget extends StatelessWidget {
     required this.onPressed,
     this.subtitleColored,
     this.notVerified = true,
+    this.rejectedState,
+    this.pendingState,
+    this.idAddressVerified,
   }) : super(key: key);
   final String title;
   final String subtitle;
   final String? subtitleColored;
   final Function()? onPressed;
   final bool notVerified;
+  final bool? rejectedState;
+  final bool? pendingState;
+  final bool? idAddressVerified;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -208,12 +240,23 @@ class VerificationCardWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           side: const BorderSide(color: AppColor.lightgrey)),
       child: ListTile(
-        title: Text(
-          title,
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium!
-              .copyWith(color: Colors.black, fontSize: 15),
+        title: Row(
+          children: [
+            Text(
+              title,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(color: Colors.black, fontSize: 15),
+            ),
+            subtitleColored == null
+                ? Text(rejectedState! ? ' Rejected' : '',
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          fontSize: 11,
+                          color: Colors.red,
+                        ))
+                : const SizedBox()
+          ],
         ),
         subtitle: RichText(
             text: TextSpan(
@@ -231,7 +274,7 @@ class VerificationCardWidget extends StatelessWidget {
                             color: notVerified ? Colors.red : Colors.green,
                           ),
                     )
-                  : const TextSpan()
+                  : TextSpan()
             ])),
         trailing: subtitleColored != null
             ? Visibility(
@@ -255,16 +298,40 @@ class VerificationCardWidget extends StatelessWidget {
                   ),
                 ),
               )
-            : ElevatedButton(
-                onPressed: onPressed,
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(91, 29),
-                  elevation: 0,
+            : Visibility(
+                visible: idAddressVerified!,
+                replacement: const Icon(
+                  Icons.check_circle_outline,
+                  size: 40,
+                  color: Colors.green,
                 ),
-                child: const Text(
-                  'Verify',
-                  style: TextStyle(
-                    fontSize: 14,
+                child: ElevatedButton(
+                  onPressed: pendingState! ? null : onPressed,
+                  style: ButtonStyle(
+                      backgroundColor: pendingState!
+                          ? MaterialStateProperty.all<Color>(AppColor.grey)
+                          : rejectedState!
+                              ? MaterialStateProperty.all<Color>(Colors.white)
+                              : null,
+                      side: rejectedState!
+                          ? MaterialStateProperty.all<BorderSide>(
+                              BorderSide(color: AppColor.grey))
+                          : null,
+                      minimumSize:
+                          MaterialStateProperty.all<Size>(Size(91, 29)),
+                      foregroundColor: MaterialStateProperty.all<Color?>(
+                        rejectedState! ? AppColor.blue : null,
+                      ),
+                      elevation: MaterialStateProperty.all<double>(0)),
+                  child: Text(
+                    pendingState!
+                        ? 'Pending'
+                        : rejectedState!
+                            ? 'Try Agin'
+                            : 'Verify',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ),

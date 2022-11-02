@@ -19,6 +19,10 @@ class EndPoints {
   static const String sendPhoneCodeVerification =
       '$baseUrl/user/send-code-mobile';
   static const String verfiyPhoneVerification = '$baseUrl/user/verify/mobile';
+  //id verification
+  static const String verfiyId = '$baseUrl/user/verify/id';
+// get user info
+  static const String userInfo = '$baseUrl/settings/profile';
 
   static const int receiveTimeout = 35000;
 }

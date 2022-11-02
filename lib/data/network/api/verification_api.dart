@@ -45,4 +45,20 @@ class VerificationApi {
       ),
     );
   }
+
+  static Future<Response> verifyId({
+    dynamic data,
+    required String token,
+  }) async {
+    return await BaseClientHelper().post(
+      EndPoints.verfiyId,
+      data: data,
+      options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+          },
+          contentType:
+              "multipart/form-data; boundary=<calculated when request is sent>"),
+    );
+  }
 }
