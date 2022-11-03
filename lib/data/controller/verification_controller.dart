@@ -84,7 +84,7 @@ class VerificationController extends ChangeNotifier {
       required File file,
       required String documentType,
       required String idNumber}) async {
-    String fileName = file.path.split('/').last;
+    // String fileName = file.path.split('/').last;
     FormData formData = FormData.fromMap({
       "file": await MultipartFile.fromFile(
         file.path,
@@ -100,10 +100,44 @@ class VerificationController extends ChangeNotifier {
     );
     if (response.statusCode == 200) {
       await refreshUserInfo();
-      await setIdVerificationState();
+      await setIdAddressVerificationState();
       notifyListeners();
       AppRouter.goAndRemove(ScreenName.verificationScreen);
       print(response.data);
+    }
+  }
+
+  verifyAddress({
+    required String token,
+    required String documentType,
+    required String address1,
+    required String address2,
+    required String city,
+    required String country,
+    required File file,
+  }) async {
+    // String fileName = file.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      "file": await MultipartFile.fromFile(
+        file.path,
+        filename: paths!.first.name,
+      ),
+      "address1": address1,
+      "address2": address2,
+      "city": city,
+      "addressDocumentType": documentType,
+      "country": country,
+    });
+
+    final Response response = await VerificationApi.verfiyAddress(
+      token: token,
+      data: formData,
+    );
+    if (response.statusCode == 200) {
+      await refreshUserInfo();
+      await setIdAddressVerificationState();
+      notifyListeners();
+      AppRouter.goAndRemove(ScreenName.verificationScreen);
     }
   }
 
@@ -114,12 +148,27 @@ class VerificationController extends ChangeNotifier {
   bool pending =
       SharedPrefController().getUser().userInfo.verifiedId["status"] ==
           "pending";
-
-  setIdVerificationState() async {
+  bool rejectedAddress =
+      SharedPrefController().getUser().userInfo.verificationAddress["status"] ==
+          "rejected";
+  bool pendingAddress =
+      SharedPrefController().getUser().userInfo.verificationAddress["status"] ==
+          "pending";
+  setIdAddressVerificationState() async {
     await refreshUserInfo();
     rejected = SharedPrefController().getUser().userInfo.verifiedId["status"] ==
         "rejected";
     pending = SharedPrefController().getUser().userInfo.verifiedId["status"] ==
+        "pending";
+    rejectedAddress = SharedPrefController()
+            .getUser()
+            .userInfo
+            .verificationAddress["status"] ==
+        "rejected";
+    pendingAddress = SharedPrefController()
+            .getUser()
+            .userInfo
+            .verificationAddress["status"] ==
         "pending";
     notifyListeners();
   }
@@ -136,7 +185,7 @@ class VerificationController extends ChangeNotifier {
       );
       await SharedPrefController().save(newUser);
 
-      // print(SharedPrefController().getUser().userInfo.verifiedId);
+      print(SharedPrefController().getUser().userInfo.verificationAddress);
     }
   }
 
@@ -159,6 +208,7 @@ class VerificationController extends ChangeNotifier {
         } else {
           validFile = true;
           disableButton[2] = true;
+          disableAddressButton[1] = true;
         }
       }
 
@@ -173,6 +223,7 @@ class VerificationController extends ChangeNotifier {
     paths = null;
     validFile = false;
     disableButton[2] = false;
+    disableAddressButton[1] = false;
     notifyListeners();
   }
 
@@ -188,7 +239,7 @@ class VerificationController extends ChangeNotifier {
     }
   }
 
-  // to selected document type
+  // to selected document type id
   String? selected;
   setSelected(String? value) {
     selected = value;
@@ -202,11 +253,23 @@ class VerificationController extends ChangeNotifier {
     "national_id": "Identity Card",
   };
 
-  // disable cilck button
-
-  List<bool> disableButton = [false, true, false];
-
-  setDisableButton() {
-    disableButton.contains(true);
+  // to selected document type address
+  String? selectedAddress;
+  setSelectedAddress(String? value) {
+    disableAddressButton[0] = true;
+    selectedAddress = value;
+    notifyListeners();
   }
+
+  Map<String, String> documentTypeAddress = {
+    "water_bill": "Water Bill",
+    "phone_bill": "Phone Bill",
+    "bank_statement": "Bank Statement",
+    "electricity_bill": "Electricity Bill",
+    "other": "other"
+  };
+
+  // disable cilck button
+  List<bool> disableButton = [false, true, false];
+  List<bool> disableAddressButton = [false, false];
 }

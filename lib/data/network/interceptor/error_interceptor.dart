@@ -26,6 +26,7 @@ class ErrorInterceptor extends Interceptor {
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
     provider.endLoading();
+    
     provider.addErrorMessage(DioExceptions.fromDioError(err));
     DioExceptions.showMessage(err);
     // super.onError(err, handler);

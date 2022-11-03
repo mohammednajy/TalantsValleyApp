@@ -11,6 +11,7 @@ import 'package:tanlants_valley_application/view/screens/auth/signUp_screen.dart
 import 'package:tanlants_valley_application/view/screens/home/home_screen.dart';
 import 'package:tanlants_valley_application/view/screens/splash/splash_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:tanlants_valley_application/view/screens/verification/address_verification/address_verification_screen.dart';
 import 'package:tanlants_valley_application/view/screens/verification/email_verification/email_verification_screen.dart';
 import 'package:tanlants_valley_application/view/screens/verification/id_verification/id_verification_screen.dart';
 import 'package:tanlants_valley_application/view/screens/verification/mobile_verification/mobile_verification_screen.dart';
@@ -76,10 +77,15 @@ Route onGenerateRoute(RouteSettings settings) {
           create: (context) => VerificationController(),
           child: const MobileVerificationScreen());
       break;
-       case ScreenName.idVerificationScreen:
+    case ScreenName.idVerificationScreen:
       result = ChangeNotifierProvider(
           create: (context) => VerificationController(),
           child: const IdVerificationScreen());
+      break;
+    case ScreenName.addressVerificationScreen:
+      result = ChangeNotifierProvider(
+          create: (context) => VerificationController(),
+          child: const AddressVerificationScreen());
       break;
     case ScreenName.homeScreen:
       result = const HomeScreen();

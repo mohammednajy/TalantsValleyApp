@@ -61,4 +61,19 @@ class VerificationApi {
               "multipart/form-data; boundary=<calculated when request is sent>"),
     );
   }
+
+   static Future<Response> verfiyAddress({
+    dynamic data,
+    required String token,
+  }) async {
+    return await BaseClientHelper().post(
+      EndPoints.verfiyAddress,
+      data: data,
+      options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+          },
+        ),
+    );
+  }
 }

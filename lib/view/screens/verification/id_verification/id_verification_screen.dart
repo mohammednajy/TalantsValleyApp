@@ -11,6 +11,8 @@ import 'package:tanlants_valley_application/view/shared/auth_shared/text_field_w
 // ignore: depend_on_referenced_packages
 import 'package:provider/provider.dart';
 
+import '../address_verification/address_verification_screen.dart';
+
 class IdVerificationScreen extends StatefulWidget {
   const IdVerificationScreen({super.key});
 
@@ -32,7 +34,6 @@ class _IdVerificationScreenState extends State<IdVerificationScreen> {
   @override
   void initState() {
     super.initState();
-    
   }
 
   @override
@@ -80,59 +81,16 @@ class _IdVerificationScreenState extends State<IdVerificationScreen> {
                 const Text(
                     'Upload Document that Proof your Identity\nSuch as:\nIdentity Card, Passport, Driver License'),
                 addVerticalSpace(25),
-                Text(
-                  'Document Type',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                addVerticalSpace(4),
-                PopupMenuButton<String>(
-                  offset: const Offset(0, 45),
-                  constraints: BoxConstraints(
-                    minWidth: MediaQuery.of(context).size.width - 64,
-                    maxWidth: double.infinity,
-                  ),
-                  child: Container(
-                    alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColor.lightgrey)),
-                    height: 44,
-                    width: double.infinity,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          valueVer.selected ?? 'Choose your document type',
-                          style: valueVer.selected == null
-                              ? const TextStyle(
-                                  color: Color.fromARGB(255, 172, 171, 171))
-                              : null,
-                        ),
-                        const Icon(Icons.keyboard_arrow_down),
-                      ],
-                    ),
-                  ),
-                  onSelected: (valuee) {
-                    valueVer.setSelected(valuee);
-                    print(valueVer.documentType.keys.firstWhere(
-                      (k) => valueVer.documentType[k] == valueVer.selected,
-                    ));
-                  },
-                  itemBuilder: (context) {
-                    return valueVer.documentType.values.map((e) {
-                      return PopupMenuItem(
-                        height: 35,
-                        value: e,
-                        child: Text(
-                          e,
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      );
-                    }).toList();
-                  },
-                ),
+                PopUpVerificationWidget(
+                    title: 'Document Type',
+                    selected: valueVer.selected,
+                    onSelected: (valuee) {
+                      valueVer.setSelected(valuee);
+                      // print(valueVer.documentType.keys.firstWhere(
+                      //   (k) => valueVer.documentType[k] == valueVer.selected,
+                      // ));
+                    },
+                    documentType: valueVer.documentType),
                 addVerticalSpace(16),
                 TextFormFieldWidget(
                   textInputAction: TextInputAction.done,
@@ -145,98 +103,19 @@ class _IdVerificationScreenState extends State<IdVerificationScreen> {
                   textKey: idKey,
                 ),
                 addVerticalSpace(32),
-                valueVer.paths == null
-                    ? ElevatedButton(
-                        onPressed: () {
-                          valueVer.pickFile();
-                        },
-                        style: ButtonStyle(
-                            elevation: MaterialStateProperty.all(0),
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.white),
-                            side: MaterialStateProperty.all<BorderSide>(
-                                const BorderSide(color: AppColor.lightgrey))),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(
-                              Icons.file_upload_outlined,
-                              color: Colors.black,
-                              size: 25,
-                            ),
-                            Text(
-                              ' Upload a File',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 16),
-                            ),
-                          ],
-                        ),
-                      )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 44,
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            // ignore: sort_child_properties_last
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.file_upload_outlined,
-                                  color: Colors.black,
-                                  size: 25,
-                                ),
-                                Text(
-                                  // ignore: prefer_interpolation_to_compose_strings
-                                  '${valueVer.fileName}\n' +
-                                      getFileSize(
-                                          valueVer.paths!.first.size, 2),
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: IconButton(
-                                      alignment: Alignment.centerRight,
-                                      onPressed: () {
-                                        valueVer.clearCachedFiles();
-                                      },
-                                      icon: const Icon(
-                                          Icons.disabled_by_default_outlined)),
-                                )
-                              ],
-                            ),
-                            decoration: BoxDecoration(
-                                color: AppColor.grey,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                    color: !valueVer.validFile
-                                        ? Colors.red
-                                        : Colors.transparent)),
-                          ),
-                          Row(
-                            children: [
-                              Visibility(
-                                  visible: !valueVer.validFile,
-                                  child: Text('Your file is too big. ',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(
-                                              fontSize: 12,
-                                              color: Colors.red))),
-                              Text(
-                                '2 MP maximum',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(fontSize: 12),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
+                FileWidget(
+                  paths: valueVer.paths,
+                  onPressed: () {
+                    valueVer.pickFile();
+                  },
+                  addressMessage: false,
+                  fileName: valueVer.fileName ?? '',
+                  fileSize: getFileSize(valueVer.paths?.first.size ?? 0, 2),
+                  onPressedClear: () {
+                    valueVer.clearCachedFiles();
+                  },
+                  vaildFile: valueVer.validFile,
+                ),
                 addVerticalSpace(58),
                 ElevatedButtonWithDisapleWidget(
                   loaderVisisble: context.watch<AuthController>().loading,
@@ -269,5 +148,74 @@ class _IdVerificationScreenState extends State<IdVerificationScreen> {
     String result =
         (0.00000095367432 * bytes).toStringAsFixed(decimals) + ' ' + "MB";
     return result;
+  }
+}
+
+class PopUpVerificationWidget extends StatelessWidget {
+  const PopUpVerificationWidget(
+      {super.key,
+      required this.title,
+      required this.selected,
+      required this.onSelected,
+      required this.documentType});
+  final String title;
+  final String? selected;
+  final Function(String)? onSelected;
+  final Map<String, String> documentType;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        addVerticalSpace(4),
+        PopupMenuButton<String>(
+          offset: const Offset(0, 45),
+          constraints: BoxConstraints(
+            minWidth: MediaQuery.of(context).size.width - 64,
+            maxWidth: double.infinity,
+          ),
+          onSelected: onSelected,
+          itemBuilder: (context) {
+            return documentType.values.map((e) {
+              return PopupMenuItem(
+                height: 35,
+                value: e,
+                child: Text(
+                  e,
+                  style: const TextStyle(color: Colors.black),
+                ),
+              );
+            }).toList();
+          },
+          child: Container(
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppColor.lightgrey)),
+            height: 55.h,
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  selected ?? 'Choose your document type',
+                  style: selected == null
+                      ? const TextStyle(
+                          color: Color.fromARGB(255, 172, 171, 171))
+                      : null,
+                ),
+                const Icon(Icons.keyboard_arrow_down),
+              ],
+            ),
+          ),
+        )
+      ],
+    );
   }
 }

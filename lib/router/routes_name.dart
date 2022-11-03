@@ -10,6 +10,7 @@ class ScreenName {
   static const String emailVerificationScreen = "email_verification_screen";
   static const String mobileVerificationScreen = "mobile_verification_screen";
   static const String idVerificationScreen = "id_verification_screen";
+  static const String addressVerificationScreen = "address_verification_screen";
 
   static const String homeScreen = "home_screen";
 }

@@ -116,3 +116,11 @@ String? isValidId(String? value) {
   }
   return result;
 }
+
+String? isNotEmpty(String? value) {
+  String? result;
+  if (value == null || value.isEmpty) {
+    result = '';
+  }
+  return result;
+}

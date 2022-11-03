@@ -21,6 +21,9 @@ class EndPoints {
   static const String verfiyPhoneVerification = '$baseUrl/user/verify/mobile';
   //id verification
   static const String verfiyId = '$baseUrl/user/verify/id';
+  //address verification
+  static const String verfiyAddress = '$baseUrl/user/verify/address';
+
 // get user info
   static const String userInfo = '$baseUrl/settings/profile';
 

@@ -15,7 +15,11 @@ class AssetPath {
   AssetPath._();
 
   static const String imageBasePath = 'assets/images/';
+  static const String iconBasePath = 'assets/icons/';
+
   static const String appLogo = '${imageBasePath}talants_logo.png';
+  static const String verifiyAddressIcon = '${iconBasePath}address_verfication_icon.png';
+
 }
 
 class AppColor {

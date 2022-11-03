@@ -20,7 +20,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
   void initState() {
     super.initState();
     // context.read<VerificationController>().setIdVerificationState();
-    context.read<VerificationController>().setIdVerificationState();
+    context.read<VerificationController>().setIdAddressVerificationState();
   }
 
   @override
@@ -148,11 +148,17 @@ class _VerificationScreenState extends State<VerificationScreen> {
               title: 'Address Verification',
               subtitle: 'Phone,Electricity,Water Bill-Bank statement',
               onPressed: () {
-                
+                AppRouter.goTo(ScreenName.addressVerificationScreen);
               },
-              rejectedState: false,
-              pendingState: false,
-              idAddressVerified: true,
+              rejectedState:
+                  context.watch<VerificationController>().rejectedAddress,
+              pendingState:
+                  context.watch<VerificationController>().pendingAddress,
+              idAddressVerified: !(SharedPrefController()
+                      .getUser()
+                      .userInfo
+                      .verificationAddress["status"] ==
+                  "approved"),
             ),
             addVerticalSpace(60),
             ElevatedButtonWithDisapleWidget(
@@ -160,7 +166,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   (SharedPrefController().getUser().userInfo.verifiedEmail &&
                       SharedPrefController().getUser().userInfo.verifiedMobile),
               onPressed: () {
-                context.read<VerificationController>().setIdVerificationState();
+                context
+                    .read<VerificationController>()
+                    .setIdAddressVerificationState();
                 AppRouter.goTo(ScreenName.homeScreen);
               },
               loaderVisisble: false,

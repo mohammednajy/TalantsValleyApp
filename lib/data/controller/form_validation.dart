@@ -9,13 +9,14 @@ class FormValidation extends ChangeNotifier {
     "lastName": null,
     "phoneNumber": null,
     "confirmPassword": null,
-    
+    "address1": null,
+    "address2": null,
+    "city": null,
+    "country": null,
   };
 
   setErrorMessage(String key, String? value) {
     errorMessages[key] = value;
     notifyListeners();
   }
-
- 
 }

@@ -44,6 +44,7 @@ class DioExceptions implements Exception {
       case 400:
         return error["message"];
       case 422:
+        print(error);
         return error["message"];
       case 401:
         return 'Unauthorized';
