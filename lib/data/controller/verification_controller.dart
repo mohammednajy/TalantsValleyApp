@@ -184,8 +184,6 @@ class VerificationController extends ChangeNotifier {
         userInfo: userInfo,
       );
       await SharedPrefController().save(newUser);
-
-      print(SharedPrefController().getUser().userInfo.verificationAddress);
     }
   }
 

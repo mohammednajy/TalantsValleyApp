@@ -37,4 +37,24 @@ class BaseClientHelper {
     return await dio.get(path,
         queryParameters: queryParameters, options: options);
   }
+
+  Future<dynamic> put(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+  }) async {
+    return await dio.put(path,
+        data: data, queryParameters: queryParameters, options: options);
+  }
+
+   Future<dynamic> delete(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+  }) async {
+    return await dio.delete(path,
+        data: data, queryParameters: queryParameters, options: options);
+  }
 }

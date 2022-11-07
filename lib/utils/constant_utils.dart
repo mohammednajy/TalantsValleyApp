@@ -18,8 +18,15 @@ class AssetPath {
   static const String iconBasePath = 'assets/icons/';
 
   static const String appLogo = '${imageBasePath}talants_logo.png';
-  static const String verifiyAddressIcon = '${iconBasePath}address_verfication_icon.png';
 
+  //icons path
+  static const String verifiyAddressIcon =
+      '${iconBasePath}address_verfication_icon.png';
+  static const String analyticsIcon = '${iconBasePath}analytics_icon.png';
+  static const String cashIcon = '${iconBasePath}cash_icon.png';
+  static const String homeIcon = '${iconBasePath}home_icon.png';
+  static const String invoiceIcon = '${iconBasePath}invoice_icon.png';
+  static const String userIcon = '${iconBasePath}user_icon.png';
 }
 
 class AppColor {

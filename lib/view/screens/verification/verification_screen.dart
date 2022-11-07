@@ -111,9 +111,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   .getUser()
                   .userInfo
                   .mobile
-                  .replaceRange(
+                  !.replaceRange(
                       4,
-                      SharedPrefController().getUser().userInfo.mobile.length -
+                      SharedPrefController().getUser().userInfo.mobile!.length -
                           3,
                       '**********'),
               subtitleColored: ' (not verified)',

@@ -66,6 +66,7 @@ class _SignInFormWidgetState extends State<SignInFormWidget> {
               focusNode: passwordNode,
               messageKey: "password",
               messageValue: isValidPassword,
+              textInputAction: TextInputAction.done,
             ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               ErrorMessageWidget(

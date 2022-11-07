@@ -44,7 +44,7 @@ class _MobileVerificationScreenState extends State<MobileVerificationScreen> {
         sixthControllerField: sixthControllerField,
         icon: Icons.mobile_friendly_outlined,
         message:
-            "We have sent you a verification code to your mobile number ${SharedPrefController().getUser().userInfo.mobile.replaceRange(0, SharedPrefController().getUser().userInfo.mobile.length - 3, "*******")} ",
+            "We have sent you a verification code to your mobile number ${SharedPrefController().getUser().userInfo.mobile!.replaceRange(0, SharedPrefController().getUser().userInfo.mobile!.length - 3, "*******")} ",
         onTapResend: () {
           context.read<VerificationController>().resendSendPhoneCode(
               token: SharedPrefController().getUser().accessToken);

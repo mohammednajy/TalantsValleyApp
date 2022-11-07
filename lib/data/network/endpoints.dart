@@ -27,5 +27,11 @@ class EndPoints {
 // get user info
   static const String userInfo = '$baseUrl/settings/profile';
 
+//for user management
+  static const String getAllUsers = '$baseUrl/team/user/list';
+  static const String setAsTeam = '$baseUrl/team/user/change-role/';
+  static const String blockUnBlock = '$baseUrl/team/user/block/';
+  static const String deleteUser = '$baseUrl/team/user/delete/';
+
   static const int receiveTimeout = 35000;
 }

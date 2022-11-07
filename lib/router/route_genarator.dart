@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tanlants_valley_application/data/controller/counrty_controller.dart';
+import 'package:tanlants_valley_application/data/controller/home_controller.dart';
 import 'package:tanlants_valley_application/data/controller/verification_controller.dart';
 import 'package:tanlants_valley_application/router/routes_name.dart';
 import 'package:tanlants_valley_application/view/screens/auth/forget_screen/forget_screen.dart';
@@ -18,6 +19,8 @@ import 'package:tanlants_valley_application/view/screens/verification/mobile_ver
 import 'package:tanlants_valley_application/view/screens/verification/verification_screen.dart';
 
 import '../data/controller/form_validation.dart';
+import '../data/controller/user_management_controller.dart';
+import '../view/screens/home/bnb_pages/user_management_page.dart';
 
 Route onGenerateRoute(RouteSettings settings) {
   dynamic result;
@@ -88,8 +91,21 @@ Route onGenerateRoute(RouteSettings settings) {
           child: const AddressVerificationScreen());
       break;
     case ScreenName.homeScreen:
-      result = const HomeScreen();
+      result = MultiProvider(providers: [
+        ChangeNotifierProvider(
+          create: (context) => HomeController(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => UserManagementController(),
+        )
+      ], child: const HomeScreen());
+
+      //  ChangeNotifierProvider(
+      //     create: (context) => HomeController(), child: const HomeScreen());
       break;
+    // case ScreenName.userManagementPage:
+    //   result = UserManagementPage();
+    //   break;
     default:
       const Scaffold(
         body: Center(child: Text('error path')),

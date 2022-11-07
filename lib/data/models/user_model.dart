@@ -1,43 +1,3 @@
-// import 'dart:convert';
-
-// void main(List<String> args) {
-//   String jsonString = '''
-// {
-//         "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiNjM1YTY0M2I3OTE5NjU0YzljMGI5ZTdkIiwicm9sZSI6MH0sImV4cCI6MTY2NzEyNTg4NywiaWF0IjoxNjY3MDM5NDg3fQ.Lqu4XFyYcpWnXWIaILCDt5-aJ8RgXRA1RdqgzhfYuTY",
-//         "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiNjM1YTY0M2I3OTE5NjU0YzljMGI5ZTdkIiwicm9sZSI6MH0sImV4cCI6MTY2OTYzMTQ4NywiaWF0IjoxNjY3MDM5NDg3fQ.GtN391OnSd_H3akpQSfzrI7xk0TrVMYozQmt2516MUA",
-//         "user": {
-//             "_id": "635a643b7919654c9c0b9e7d",
-//             "firstName": "mohammed",
-//             "lastName": "naji",
-//             "email": "mohammed.najy55@gmail.com",
-//             "mobile": "+972592663280",
-//             "balance": 0,
-//             "verifiedEmail": false,
-//             "verifiedMobile": false,
-//             "verifiedAddress": {
-//                 "disapproveReason": {},
-//                 "status": "not_uploaded"
-//             },
-//             "verifiedId": {
-//                 "disapproveReason": {},
-//                 "status": "not_uploaded"
-//             },
-//             "role": 0,
-//             "address": {
-//                 "country": "Palestinian"
-//             },
-//             "isBlocked": false
-//         }
-//     }
-// ''';
-//   final json = jsonDecode(jsonString);
-//   UserModel userModel = UserModel.fromJson(json);
-
-//   print(userModel.accessToken);
-
-//   print(userModel.toJson());
-// }
-
 class UserModel {
   final String accessToken;
   final String refreshToken;
@@ -69,15 +29,15 @@ class UserInfo {
   final String firstName;
   final String lastName;
   final String email;
-  final String mobile;
+  final String? mobile;
   final int balance;
   final bool verifiedEmail;
   final bool verifiedMobile;
   final Map verificationAddress;
   final Map verifiedId;
-  final int role;
-  final Map address;
-  final bool isBlocked;
+   int role;
+  final Map? address;
+   bool isBlocked;
 
   UserInfo(
       {required this.id,
