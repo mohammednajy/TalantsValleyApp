@@ -60,7 +60,10 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
             children: [
               Text(
                 widget.title,
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(fontSize: 14),
               ),
               addVerticalSpace(5),
             ],

@@ -148,6 +148,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
             ),
             addVerticalSpace(5),
             DropdownButtonFormField<String>(
+                isExpanded: true,
                 icon: const Icon(Icons.keyboard_arrow_down_outlined),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 menuMaxHeight: 150,
@@ -168,7 +169,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       e.name,
-                      style: const TextStyle(fontSize: 11),
+                      style: const TextStyle(fontSize: 15),
                     ),
                   );
                 }).toList()),

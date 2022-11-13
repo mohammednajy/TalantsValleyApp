@@ -11,6 +11,8 @@ class ScreenName {
   static const String mobileVerificationScreen = "mobile_verification_screen";
   static const String idVerificationScreen = "id_verification_screen";
   static const String addressVerificationScreen = "address_verification_screen";
-  // static const String userManagementPage ="user_management_page";
+  static const String editManagementScreen = "edit_management_page";
   static const String homeScreen = "home_screen";
+  static const String detailsManagementScreen = "details_management_page";
+  static const String userManagementPage = "user_management_page";
 }

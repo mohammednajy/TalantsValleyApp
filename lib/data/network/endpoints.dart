@@ -32,6 +32,9 @@ class EndPoints {
   static const String setAsTeam = '$baseUrl/team/user/change-role/';
   static const String blockUnBlock = '$baseUrl/team/user/block/';
   static const String deleteUser = '$baseUrl/team/user/delete/';
+//for user details in user management
+  static const String userDetails = '$baseUrl/team/user/details/';
+  static const String userDetailsEdit = '$baseUrl/team/user/details/';
 
   static const int receiveTimeout = 35000;
 }

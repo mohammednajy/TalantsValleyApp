@@ -1,15 +1,20 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:tanlants_valley_application/data/network/endpoints.dart';
 
-import '../base_client.dart';
+import '../../base_client.dart';
 
 class UserManagementApi {
+ 
+
   static Future<Response> getUsers({
     required String token,
     String? search,
     bool isBlocked = false,
     bool isTeam = false,
     String sort = "-createdAt",
+    int offset = 0,
+    int limit = 20,
   }) async {
     return await BaseClientHelper().get(EndPoints.getAllUsers,
         options: Options(headers: {
@@ -19,7 +24,9 @@ class UserManagementApi {
           "search": search,
           "isBlocked": isBlocked,
           "isTeam": isTeam,
-          "sort": sort
+          "sort": sort,
+          "offset": offset,
+          "limit": limit
         });
   }
 
@@ -58,5 +65,4 @@ class UserManagementApi {
           },
         ));
   }
-
 }

@@ -12,4 +12,7 @@ class AppRouter {
   static goTo(String screenName) {
     navigationKey.currentState!.pushNamed(screenName);
   }
+  static back() {
+    navigationKey.currentState!.pop();
+  }
 }

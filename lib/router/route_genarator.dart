@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tanlants_valley_application/data/controller/counrty_controller.dart';
 import 'package:tanlants_valley_application/data/controller/home_controller.dart';
+import 'package:tanlants_valley_application/data/controller/user_management_controller/user_details_controller.dart';
 import 'package:tanlants_valley_application/data/controller/verification_controller.dart';
 import 'package:tanlants_valley_application/router/routes_name.dart';
 import 'package:tanlants_valley_application/view/screens/auth/forget_screen/forget_screen.dart';
@@ -9,6 +10,7 @@ import 'package:tanlants_valley_application/view/screens/auth/forget_screen/otp_
 import 'package:tanlants_valley_application/view/screens/auth/forget_screen/password_reset_done_screen.dart';
 import 'package:tanlants_valley_application/view/screens/auth/login_screen.dart';
 import 'package:tanlants_valley_application/view/screens/auth/signUp_screen.dart';
+import 'package:tanlants_valley_application/view/screens/home/bnb_pages/user_management_page/edit_user_screen.dart';
 import 'package:tanlants_valley_application/view/screens/home/home_screen.dart';
 import 'package:tanlants_valley_application/view/screens/splash/splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -19,8 +21,9 @@ import 'package:tanlants_valley_application/view/screens/verification/mobile_ver
 import 'package:tanlants_valley_application/view/screens/verification/verification_screen.dart';
 
 import '../data/controller/form_validation.dart';
-import '../data/controller/user_management_controller.dart';
-import '../view/screens/home/bnb_pages/user_management_page.dart';
+import '../data/controller/user_management_controller/user_management_controller.dart';
+import '../view/screens/home/bnb_pages/user_management_page/user_details_screen.dart';
+import '../view/screens/home/bnb_pages/user_management_page/user_management_page.dart';
 
 Route onGenerateRoute(RouteSettings settings) {
   dynamic result;
@@ -86,9 +89,19 @@ Route onGenerateRoute(RouteSettings settings) {
           child: const IdVerificationScreen());
       break;
     case ScreenName.addressVerificationScreen:
-      result = ChangeNotifierProvider(
-          create: (context) => VerificationController(),
-          child: const AddressVerificationScreen());
+
+      //
+      result = MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => VerificationController(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => CounteryController(),
+          ),
+        ],
+        child: const AddressVerificationScreen(),
+      );
       break;
     case ScreenName.homeScreen:
       result = MultiProvider(providers: [
@@ -97,15 +110,33 @@ Route onGenerateRoute(RouteSettings settings) {
         ),
         ChangeNotifierProvider(
           create: (context) => UserManagementController(),
-        )
+        ),
+        // ChangeNotifierProvider(
+        //   create: (context) => UserDetailsController(),
+        // )
       ], child: const HomeScreen());
 
       //  ChangeNotifierProvider(
       //     create: (context) => HomeController(), child: const HomeScreen());
       break;
     // case ScreenName.userManagementPage:
-    //   result = UserManagementPage();
+    //   result = ChangeNotifierProvider(
+    //       create: (context) => UserDetailsController(),
+    //       child: const UserManagementPage());
+     
     //   break;
+    // case ScreenName.detailsManagementScreen:
+    //   result = ChangeNotifierProvider(
+    //       create: (context) => UserDetailsController(),
+    //       child: UserDetailsScreen());
+
+      // break;
+      //   case ScreenName.editManagementScreen:
+      // result = ChangeNotifierProvider(
+      //     create: (context) => UserDetailsController(),
+      //     child: EditUserScreen());
+
+      // break;
     default:
       const Scaffold(
         body: Center(child: Text('error path')),

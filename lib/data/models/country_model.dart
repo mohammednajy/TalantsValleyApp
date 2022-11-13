@@ -15,12 +15,3 @@ class CounteryModel {
 
 
 
-/**
-  Map<String, String?> errorMessagesSignUp = {
-    "firsName": null,
-    "lastName": null,
-    "email": null,
-    "password": null,
-    "phoneNumber": null
-  };
- */

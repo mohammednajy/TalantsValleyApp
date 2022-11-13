@@ -1,34 +1,88 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:tanlants_valley_application/data/controller/auth_controller.dart';
-import 'package:tanlants_valley_application/data/controller/verification_controller.dart';
 import 'package:tanlants_valley_application/data/models/user_model.dart';
-import 'package:tanlants_valley_application/data/network/api/user_management_api.dart';
+import 'package:tanlants_valley_application/data/network/api/user_management_api/user_management_api.dart';
+// ignore: depend_on_referenced_packages
 import 'package:provider/provider.dart';
 import 'package:tanlants_valley_application/router/router.dart';
 
-import '../../storage/sherd_perf.dart';
-import '../network/api/auth_api.dart';
 
 class UserManagementController extends ChangeNotifier {
   List<UserInfo> users = [];
-  getUser({
+  int offset = 20;
+  int limit = 20;
+  bool hasNextPage = true;
+  bool isLoadMoreRunning = false;
+
+  loadMore({
     required String token,
     String? search,
     bool isBlocked = false,
     bool isTeam = false,
     String sort = "-createdAt",
   }) async {
-    Provider.of<AuthController>(AppRouter.navigationKey.currentContext!,
-            listen: false)
-        .cnacelResendLoading = true;
-    print("this is sort" + sort);
+    isLoadMoreRunning = true;
+    hasNextPage = true;
+    notifyListeners();
     Response response = await UserManagementApi.getUsers(
       token: token,
       search: search,
       isBlocked: isBlocked,
       isTeam: isTeam,
       sort: sort,
+      offset: offset,
+      limit: limit,
+    );
+    if (response.statusCode == 200) {
+      final List data = response.data["data"]["users"];
+      if (data.isNotEmpty) {
+        List<UserInfo> moreUsers =
+            data.map((e) => UserInfo.fromJson(e)).toList();
+        users.addAll(moreUsers);
+        notifyListeners();
+      } else {
+        hasNextPage = false;
+        Timer(
+          const Duration(seconds: 1),
+          () {
+            hasNextPage = true;
+            notifyListeners();
+          },
+        );
+
+        notifyListeners();
+      }
+    }
+
+    isLoadMoreRunning = false;
+    offset = users.length;
+    notifyListeners();
+  }
+
+  getUser({
+    required String token,
+    String? search,
+    bool isBlocked = false,
+    bool isTeam = false,
+    String sort = "-createdAt",
+    int offset = 0,
+    int limit = 20,
+  }) async {
+    Provider.of<AuthController>(AppRouter.navigationKey.currentContext!,
+            listen: false)
+        .cnacelResendLoading = true;
+    Response response = await UserManagementApi.getUsers(
+      token: token,
+      search: search,
+      isBlocked: isBlocked,
+      isTeam: isTeam,
+      sort: sort,
+      offset: offset,
+      limit: limit,
     );
     if (response.statusCode == 200) {
       final List data = response.data["data"]["users"];
@@ -84,4 +138,6 @@ class UserManagementController extends ChangeNotifier {
     filterValues[index] = !filterValues[index]!;
     notifyListeners();
   }
+
+  
 }

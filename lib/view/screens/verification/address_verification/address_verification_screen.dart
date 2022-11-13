@@ -10,6 +10,7 @@ import 'package:tanlants_valley_application/view/screens/verification/id_verific
 import 'package:tanlants_valley_application/view/shared/auth_shared/text_field_widget.dart';
 
 import '../../../../data/controller/auth_controller.dart';
+import '../../../../data/controller/counrty_controller.dart';
 import '../verification_screen.dart';
 
 class AddressVerificationScreen extends StatefulWidget {
@@ -24,12 +25,10 @@ class _AddressVerificationScreenState extends State<AddressVerificationScreen> {
   TextEditingController address1Controller = TextEditingController();
   TextEditingController address2Controller = TextEditingController();
   TextEditingController cityController = TextEditingController();
-  TextEditingController countryController = TextEditingController();
 
   FocusNode focusNodeAddress1 = FocusNode();
   FocusNode focusNodeAddress2 = FocusNode();
   FocusNode cityNodeAddress = FocusNode();
-  FocusNode counrtyNodeAddress = FocusNode();
   GlobalKey<FormState> addressKey = GlobalKey();
   @override
   void dispose() {
@@ -38,10 +37,14 @@ class _AddressVerificationScreenState extends State<AddressVerificationScreen> {
     focusNodeAddress1.dispose();
     focusNodeAddress2.dispose();
     cityNodeAddress.dispose();
-    counrtyNodeAddress.dispose();
     cityController.dispose();
-    countryController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<CounteryController>(context, listen: false).countries();
   }
 
   @override
@@ -127,13 +130,49 @@ class _AddressVerificationScreenState extends State<AddressVerificationScreen> {
                       ),
                       addHorizontalSpace(10),
                       Expanded(
-                        child: TextFormFieldWidget(
-                          title: 'Country',
-                          controller: countryController,
-                          focusNode: counrtyNodeAddress,
-                          messageKey: "country",
-                          messageValue: isNotEmpty,
-                          textInputAction: TextInputAction.done,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Counrty',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(fontSize: 14),
+                            ),
+                            addVerticalSpace(5),
+                            Consumer<CounteryController>(
+                              builder: (context, value, child) =>
+                                  DropdownButtonFormField<String>(
+                                icon: Icon(Icons.expand_more),
+                                menuMaxHeight: 150,
+                                isExpanded: true,
+                                validator: (value) {
+                                  if (value == null) {
+                                    return "";
+                                  }
+                                  if (value.isEmpty) {
+                                    return "";
+                                  }
+                                },
+                                items: value.result
+                                    .map((e) => DropdownMenuItem(
+                                          value: e.name,
+                                          child: Text(
+                                            e.name.toString(),
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ))
+                                    .toList(),
+                                onChanged: (String? newValue) {
+                                  value.setSelectedCounrty(newValue);
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       )
                     ],
@@ -157,7 +196,6 @@ class _AddressVerificationScreenState extends State<AddressVerificationScreen> {
                       loaderVisisble: context.watch<AuthController>().loading,
                       onPressed: () {
                         if (addressKey.currentState!.validate()) {
-        
                           value.verifyAddress(
                             token: SharedPrefController().getUser().accessToken,
                             documentType:
@@ -169,7 +207,10 @@ class _AddressVerificationScreenState extends State<AddressVerificationScreen> {
                             address1: address1Controller.text,
                             address2: address2Controller.text,
                             city: cityController.text,
-                            country: countryController.text,
+                            country: Provider.of<CounteryController>(context,
+                                        listen: false)
+                                    .selectedCounrty ??
+                                '',
                             file: value.file,
                           );
                         }

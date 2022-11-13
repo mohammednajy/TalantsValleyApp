@@ -24,6 +24,7 @@ class UserModel {
       };
 }
 
+
 class UserInfo {
   final String id;
   final String firstName;
