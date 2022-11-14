@@ -86,9 +86,6 @@ class _IdVerificationScreenState extends State<IdVerificationScreen> {
                     selected: valueVer.selected,
                     onSelected: (valuee) {
                       valueVer.setSelected(valuee);
-                      // print(valueVer.documentType.keys.firstWhere(
-                      //   (k) => valueVer.documentType[k] == valueVer.selected,
-                      // ));
                     },
                     documentType: valueVer.documentType),
                 addVerticalSpace(16),

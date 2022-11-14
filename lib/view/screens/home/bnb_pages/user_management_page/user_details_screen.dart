@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:tanlants_valley_application/data/models/user_details_model.dart';
 import 'package:tanlants_valley_application/utils/constant_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:tanlants_valley_application/view/screens/home/bnb_pages/user_management_page/approval_screen.dart';
 import 'package:tanlants_valley_application/view/screens/home/bnb_pages/user_management_page/edit_user_screen.dart';
 
 import '../../../../../data/controller/counrty_controller.dart';
@@ -48,8 +50,6 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
   // };
   @override
   Widget build(BuildContext context) {
-    print(
-        '${Provider.of<UserDetailsController>(context).userDetailsInfo?.firstName.toString()} in user details');
     return Consumer<UserDetailsController>(
       builder: (context, userDetails, child) => Scaffold(
         appBar: AppBar(
@@ -91,7 +91,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                             builder: (context) =>
                                 ChangeNotifierProvider<CounteryController>(
                                     create: (context) => CounteryController(),
-                                    child: EditUserScreen(
+                                    child: const EditUserScreen(
                                         // userInfo: widget.userData
                                         )),
                           ));
@@ -123,12 +123,8 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                         trailingWidget: RichTextDetailsWidget(
                           //  "status": "not_uploaded"
                           firstText: userDetails
-                                      .userDetailsInfo!.verifiedId["status"] !=
-                                  "approved"
-                              ? ' - - - - - - - - - '
-                              : userDetails.userDetailsInfo!
-                                      .verifiedId["idNumber"] ??
-                                  '',
+                                  .userDetailsInfo!.verifiedId["idNumber"] ??
+                              ' - - - - - - ',
                           secoundText: userDetails
                                       .userDetailsInfo!.verifiedId["status"] !=
                                   "approved"
@@ -139,26 +135,44 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                                   "approved"
                               ? true
                               : false,
+                          // ID Approval
+                          onTapApproval: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ApprovalScreen(
+                                    type: "id",
+                                  ),
+                                ));
+                          },
                         ),
                       ),
                       addVerticalSpace(10),
                       RowInfoWidget(
                         leadingText: 'Address',
                         trailingWidget: RichTextDetailsWidget(
-                          firstText: userDetails
-                                      .userDetailsInfo!.address!["address1"] ==
-                                  null
-                              ? userDetails
-                                      .userDetailsInfo!.address!["country"] ??
-                                  ''
-                              : '${userDetails.userDetailsInfo!.address!["address1"] ?? ''} - ${userDetails.userDetailsInfo!.address!["city"] ?? ''} - ${userDetails.userDetailsInfo!.address!["country"] ?? ''}',
-                          secoundText: '',
-                          thirdText: userDetails.userDetailsInfo!
-                                      .verificationAddress["status"] !=
-                                  "approved"
-                              ? true
-                              : false,
-                        ),
+                            firstText: userDetails.userDetailsInfo!
+                                        .address!["address1"] ==
+                                    null
+                                ? userDetails
+                                        .userDetailsInfo!.address!["country"] ??
+                                    ''
+                                : '${userDetails.userDetailsInfo!.address!["address1"] ?? ''} - ${userDetails.userDetailsInfo!.address!["city"] ?? ''} - ${userDetails.userDetailsInfo!.address!["country"] ?? ''}',
+                            secoundText: '',
+                            thirdText: userDetails.userDetailsInfo!
+                                        .verificationAddress["status"] !=
+                                    "approved"
+                                ? true
+                                : false,
+                            onTapApproval: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const ApprovalScreen(
+                                      type: "address",
+                                    ),
+                                  ));
+                            }),
                       ),
                       addVerticalSpace(10),
                       RowInfoWidget(
@@ -338,16 +352,18 @@ class RichTextDetailsWidget extends StatelessWidget {
     required this.firstText,
     this.secoundText,
     this.thirdText = false,
+    this.onTapApproval,
   }) : super(key: key);
   final String firstText;
   final String? secoundText;
   final bool thirdText;
-
+  final Function()? onTapApproval;
   @override
   Widget build(BuildContext context) {
     return RichText(
       text: TextSpan(
         text: firstText,
+        recognizer: TapGestureRecognizer()..onTap = onTapApproval,
         style: const TextStyle(
           color: Colors.transparent,
           shadows: [Shadow(color: Colors.black, offset: Offset(-1, -3))],
@@ -365,7 +381,7 @@ class RichTextDetailsWidget extends StatelessWidget {
                   ]))
               : const TextSpan(),
           thirdText
-              ? const TextSpan(
+              ? TextSpan(
                   text: ' Not Verified',
                   style: TextStyle(
                       shadows: [

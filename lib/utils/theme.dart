@@ -5,12 +5,7 @@ import 'constant_utils.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 ThemeData lightTheme = ThemeData(
-    // appBarTheme: const AppBarTheme(
-    //     systemOverlayStyle: SystemUiOverlayStyle(
-    //   statusBarColor: Colors.green,
-    //   statusBarIconBrightness: Brightness.dark,
-    //   statusBarBrightness: Brightness.light,
-    // )),
+
     scaffoldBackgroundColor: const Color(0xFFF3F4F6),
     brightness: Brightness.light,
     fontFamily: 'Segoe UI',

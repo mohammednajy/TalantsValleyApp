@@ -49,4 +49,41 @@ class UserDetailsApi {
           }
         });
   }
+
+  static Future<Response> userApproval(
+      {required String token, required String id, required String type}) async {
+    return await BaseClientHelper().put('${EndPoints.userApprove}$id',
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+          },
+        ),
+        data: {
+          "type": type,
+          "isApproved": true,
+        });
+  }
+
+  static Future<Response> userDisapproval({
+    required String token,
+    required String id,
+    required String type,
+    required String reason,
+    required String note,
+  }) async {
+    return await BaseClientHelper().put('${EndPoints.userApprove}$id',
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+          },
+        ),
+        data: {
+          "type": type,
+          "isApproved": false,
+          "disapproveReason": {
+            "reason": reason,
+            "note": note
+          }
+        });
+  }
 }

@@ -57,7 +57,6 @@ class UserDetailsController with ChangeNotifier {
     );
 
     if (response.statusCode == 200) {
-      print(response.data);
       refreshEditedUser(token: token, id: id);
 
       UtilsConfig.showSnackBarMessage(
@@ -73,5 +72,48 @@ class UserDetailsController with ChangeNotifier {
       userDetailsInfo = UserDetailsModel.fromJson(dataResponse);
       notifyListeners();
     }
+  }
+
+  userApproval(
+      {required String token, required String id, required String type}) async {
+    Response response =
+        await UserDetailsApi.userApproval(token: token, id: id, type: type);
+    if (response.statusCode == 200) {
+      refreshEditedUser(token: token, id: id);
+      UtilsConfig.showSnackBarMessage(
+          message: 'Edited Sucessfully', status: true);
+      AppRouter.back();
+    }
+  }
+
+  userDisapproval(
+      {required String token,
+      required String id,
+      required String type,
+      required String note,
+      required String reason}) async {
+    Response response = await UserDetailsApi.userDisapproval(
+      token: token,
+      id: id,
+      type: type,
+      note: note,
+      reason: reason,
+    );
+    if (response.statusCode == 200) {
+      refreshEditedUser(token: token, id: id);
+      UtilsConfig.showSnackBarMessage(
+          message: 'Edited Sucessfully', status: true);
+      AppRouter.back();
+    }
+  }
+
+  Map<String, String> resonDisapproval = {
+    "1": "Outdated Document",
+    "2": "Fraud Document"
+  };
+  String? selected;
+  setSelected(String? value) {
+    selected = value;
+    notifyListeners();
   }
 }

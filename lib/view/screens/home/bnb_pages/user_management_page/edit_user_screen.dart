@@ -14,9 +14,7 @@ import '../../../../shared/auth_shared/text_field_widget.dart';
 import '../../../../shared/buttons/button_widget.dart';
 
 class EditUserScreen extends StatefulWidget {
-  const EditUserScreen(
-      {
-      super.key});
+  const EditUserScreen({super.key});
 
   @override
   State<EditUserScreen> createState() => _EditUserScreenState();
@@ -56,16 +54,10 @@ class _EditUserScreenState extends State<EditUserScreen> {
         context.read<UserDetailsController>().userDetailsInfo!.mobile ??
             'no mobile';
     idNumberController.text = context
-                .read<UserDetailsController>()
-                .userDetailsInfo!
-                .verifiedId["status"] !=
-            "approved"
-        ? ''
-        : context
-                .read<UserDetailsController>()
-                .userDetailsInfo!
-                .verifiedId["idNumber"] ??
-            '';
+            .read<UserDetailsController>()
+            .userDetailsInfo!
+            .verifiedId["idNumber"] ??
+        '';
     address1Controller.text = context
             .read<UserDetailsController>()
             .userDetailsInfo!

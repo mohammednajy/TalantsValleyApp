@@ -35,6 +35,7 @@ class EndPoints {
 //for user details in user management
   static const String userDetails = '$baseUrl/team/user/details/';
   static const String userDetailsEdit = '$baseUrl/team/user/details/';
+  static const String userApprove = '$baseUrl/team/user/approve/';
 
   static const int receiveTimeout = 35000;
 }
