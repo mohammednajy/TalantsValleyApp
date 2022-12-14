@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tanlants_valley_application/data/controller/counrty_controller.dart';
 import 'package:tanlants_valley_application/data/controller/home_controller.dart';
+import 'package:tanlants_valley_application/data/controller/user_management_controller/transfers_controller.dart';
 import 'package:tanlants_valley_application/data/controller/user_management_controller/user_details_controller.dart';
 import 'package:tanlants_valley_application/data/controller/verification_controller.dart';
+import 'package:tanlants_valley_application/data/models/user_details_model.dart';
 import 'package:tanlants_valley_application/router/routes_name.dart';
 import 'package:tanlants_valley_application/view/screens/auth/forget_screen/forget_screen.dart';
 import 'package:tanlants_valley_application/view/screens/auth/forget_screen/new_password_screen.dart';
@@ -10,7 +12,12 @@ import 'package:tanlants_valley_application/view/screens/auth/forget_screen/otp_
 import 'package:tanlants_valley_application/view/screens/auth/forget_screen/password_reset_done_screen.dart';
 import 'package:tanlants_valley_application/view/screens/auth/login_screen.dart';
 import 'package:tanlants_valley_application/view/screens/auth/signUp_screen.dart';
+import 'package:tanlants_valley_application/view/screens/home/bnb_pages/user_management_page/add_bank_screen.dart';
+import 'package:tanlants_valley_application/view/screens/home/bnb_pages/user_management_page/approval_screen.dart';
+import 'package:tanlants_valley_application/view/screens/home/bnb_pages/user_management_page/edit_financial_info_screen.dart';
 import 'package:tanlants_valley_application/view/screens/home/bnb_pages/user_management_page/edit_user_screen.dart';
+import 'package:tanlants_valley_application/view/screens/home/bnb_pages/user_management_page/transfers_screens/transfers_screen.dart';
+import 'package:tanlants_valley_application/view/screens/home/bnb_pages/user_management_page/user_ip_screen.dart';
 import 'package:tanlants_valley_application/view/screens/home/home_screen.dart';
 import 'package:tanlants_valley_application/view/screens/splash/splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -111,32 +118,27 @@ Route onGenerateRoute(RouteSettings settings) {
         ChangeNotifierProvider(
           create: (context) => UserManagementController(),
         ),
-        // ChangeNotifierProvider(
-        //   create: (context) => UserDetailsController(),
-        // )
       ], child: const HomeScreen());
 
-      //  ChangeNotifierProvider(
-      //     create: (context) => HomeController(), child: const HomeScreen());
       break;
-    // case ScreenName.userManagementPage:
-    //   result = ChangeNotifierProvider(
-    //       create: (context) => UserDetailsController(),
-    //       child: const UserManagementPage());
-     
-    //   break;
-    // case ScreenName.detailsManagementScreen:
-    //   result = ChangeNotifierProvider(
-    //       create: (context) => UserDetailsController(),
-    //       child: UserDetailsScreen());
+    case ScreenName.userIPScreen:
+      result = const UserIPScreen();
+      break;
 
-      // break;
-      //   case ScreenName.editManagementScreen:
-      // result = ChangeNotifierProvider(
-      //     create: (context) => UserDetailsController(),
-      //     child: EditUserScreen());
-
-      // break;
+    case ScreenName.userDetailsScreen:
+      result = const UserDetailsScreen();
+      break;
+    case ScreenName.editFinancialInfoScreen:
+      result = const EditFinancialInfoScreen();
+      break;
+    case ScreenName.transfersScreen:
+      result = ChangeNotifierProvider(
+        create: (context) => TransfersController(),
+        child: const TransfersScreen());
+      break;
+    case ScreenName.addBankScreen:
+      result = const AddBankScreen();
+      break;
     default:
       const Scaffold(
         body: Center(child: Text('error path')),

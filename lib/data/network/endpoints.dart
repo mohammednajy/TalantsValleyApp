@@ -1,7 +1,8 @@
 class EndPoints {
   EndPoints._();
 
-  static const String baseUrl = 'https://talents-valley.herokuapp.com/api';
+  static const String baseUrl =
+      "https://talents-valley-backend.herokuapp.com/api";
 
   //for auth
   static const String loginUrl = '$baseUrl/user/login';
@@ -36,6 +37,9 @@ class EndPoints {
   static const String userDetails = '$baseUrl/team/user/details/';
   static const String userDetailsEdit = '$baseUrl/team/user/details/';
   static const String userApprove = '$baseUrl/team/user/approve/';
-
+  static const String userIP = '$baseUrl/team/user/ip-records/';
+  static const String editFinancialInfo = '$baseUrl/team/user/financial/';
+ 
+ 
   static const int receiveTimeout = 35000;
 }

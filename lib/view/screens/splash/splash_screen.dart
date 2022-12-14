@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tanlants_valley_application/router/router.dart';
 import 'package:tanlants_valley_application/router/routes_name.dart';
 import 'package:tanlants_valley_application/utils/constant_utils.dart';
-import 'package:tanlants_valley_application/view/screens/auth/login_screen.dart';
 
 import '../../../storage/sherd_perf.dart';
 
@@ -15,7 +13,9 @@ class SplashScreen extends StatelessWidget {
     Future.delayed(
       const Duration(seconds: 2),
       () => SharedPrefController().getLogedin()
-          ? AppRouter.goAndRemove(ScreenName.verificationScreen)
+          ? SharedPrefController().getUser().userInfo.role == 0
+              ? AppRouter.goAndRemove(ScreenName.verificationScreen)
+              : AppRouter.goAndRemove(ScreenName.homeScreen)
           : AppRouter.goAndRemove(ScreenName.loginScreen),
     );
     return Scaffold(

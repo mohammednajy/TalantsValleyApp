@@ -1,23 +1,27 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:tanlants_valley_application/data/models/user_details_model.dart';
 import 'package:tanlants_valley_application/router/router.dart';
 // ignore: depend_on_referenced_packages
 import 'package:provider/provider.dart';
+import 'package:tanlants_valley_application/router/routes_name.dart';
 import 'package:tanlants_valley_application/utils/helper.dart';
 import '../../../view/screens/home/bnb_pages/user_management_page/user_details_screen.dart';
 import '../../network/api/user_management_api/user_details_api.dart';
 
 class UserDetailsController with ChangeNotifier {
   UserDetailsModel? userDetailsInfo;
-
+  Transfers? userTransfer;
+  List userIpRecords = [];
   userDetails({required String token, required String id}) async {
     Response response = await UserDetailsApi.userDetails(token: token, id: id);
     if (response.statusCode == 200) {
       final dataResponse = response.data["data"]["user"];
 
       userDetailsInfo = UserDetailsModel.fromJson(dataResponse);
-
+      userTransfer = Transfers.fromJson(response.data["data"]["transfer"]);
       notifyListeners();
 
       Navigator.push(
@@ -70,6 +74,7 @@ class UserDetailsController with ChangeNotifier {
     if (response.statusCode == 200) {
       final dataResponse = response.data["data"]["user"];
       userDetailsInfo = UserDetailsModel.fromJson(dataResponse);
+      userTransfer = Transfers.fromJson(response.data["data"]["transfer"]);
       notifyListeners();
     }
   }
@@ -115,5 +120,35 @@ class UserDetailsController with ChangeNotifier {
   setSelected(String? value) {
     selected = value;
     notifyListeners();
+  }
+
+  userIP({required String token, required String id}) async {
+    Response response = await UserDetailsApi.userIP(token: token, id: id);
+    if (response.statusCode == 200) {
+      userIpRecords = response.data["data"]["records"];
+      notifyListeners();
+      AppRouter.goTo(ScreenName.userIPScreen);
+    }
+  }
+
+  editFinancialInfo({
+    required String token,
+    required String id,
+    required int profit,
+    required int balance,
+    required int revenue,
+  }) async {
+    Response response = await UserDetailsApi.editFinancialInfo(
+        token: token,
+        id: id,
+        balance: balance,
+        profit: profit,
+        revenue: revenue);
+    if (response.statusCode == 200) {
+      refreshEditedUser(token: token, id: id);
+      UtilsConfig.showSnackBarMessage(
+          message: 'Edited Sucessfully', status: true);
+      AppRouter.back();
+    }
   }
 }

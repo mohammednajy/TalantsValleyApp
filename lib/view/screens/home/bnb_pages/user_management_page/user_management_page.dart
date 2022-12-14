@@ -174,6 +174,7 @@ class _UserManagementPageState extends State<UserManagementPage> {
                                     borderRadius: BorderRadius.circular(10)),
                                 child: ListTile(
                                     onTap: () {
+                                    
                                       context
                                           .read<UserDetailsController>()
                                           .userDetails(

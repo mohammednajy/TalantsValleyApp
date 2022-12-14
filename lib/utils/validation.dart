@@ -124,3 +124,14 @@ String? isNotEmpty(String? value) {
   }
   return result;
 }
+
+String? isNumber(String? value) {
+  String? result;
+  final isNumberReg = RegExp(r'^[0-9]+$');
+  if (value == null || value.isEmpty) {
+    result = '';
+  } else if (!(isNumberReg.hasMatch(value))) {
+    result = '';
+  }
+  return result;
+}

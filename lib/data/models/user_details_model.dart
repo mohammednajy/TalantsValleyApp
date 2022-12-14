@@ -1,47 +1,4 @@
-import 'dart:convert';
-
 import 'package:tanlants_valley_application/data/models/user_model.dart';
-
-// void main(List<String> args) {
-//   String jsonString='''
-// {
-//             "address": {
-//                 "country": "Palestine",
-//                 "city": "Gaza",
-//                 "address1": "Tal Alhawa",
-//                 "address2": "-"
-//             },
-//             "verifiedAddress": {
-//                 "status": "approved",
-//                 "addressDocumentType": "other",
-//                 "addressFile": "https://firebasestorage.googleapis.com/v0/b/talents-valley.appspot.com/o/ADDRESS_Files%2F6337f7627ec5f471f88f78c8?alt=media&token=bcb9d671-a4bc-4b27-b7ba-fed8a6c6b3a8",
-//                 "otherDocumentType": "rent contract",
-//                 "note": null
-//             },
-//             "verifiedId": {
-//                 "status": "rejected"
-//             },
-//             "_id": "6337f7627ec5f471f88f78c8",
-//             "firstName": "Heba",
-//             "lastName": "Test",
-//             "email": "testewfc@gmail.com",
-//             "mobile": "+970597044345",
-//             "verifiedEmail": true,
-//             "verifiedMobile": true,
-//             "isBlocked": false,
-//             "role": 0,
-//             "balance": 1000,
-//             "lastLoginIP": "192.158.1.38",
-//             "profit": 100,
-//             "revenue": 200,
-//             "lastLogin": "2022-10-12T06:00:12.261Z",
-//             "createdAt": "2022-10-01T08:16:34.315Z",
-//             "updatedAt": "2022-10-12T06:02:26.563Z"
-//         }''';
-
-//     final jsonObject=jsonDecode(jsonString);
-//     print(UserDetailsModel.fromJson(jsonObject).revenue);
-// }
 
 class UserDetailsModel extends UserInfo {
   final String? lastLoginIP;
@@ -96,39 +53,13 @@ class UserDetailsModel extends UserInfo {
     );
   }
 }
-/**
- "user": {
-            "address": {
-                "country": "Palestine",
-                "city": "Gaza",
-                "address1": "Tal Alhawa",
-                "address2": "-"
-            },
-            "verifiedAddress": {
-                "status": "approved",
-                "addressDocumentType": "other",
-                "addressFile": "https://firebasestorage.googleapis.com/v0/b/talents-valley.appspot.com/o/ADDRESS_Files%2F6337f7627ec5f471f88f78c8?alt=media&token=bcb9d671-a4bc-4b27-b7ba-fed8a6c6b3a8",
-                "otherDocumentType": "rent contract",
-                "note": null
-            },
-            "verifiedId": {
-                "status": "rejected"
-            },
-            "_id": "6337f7627ec5f471f88f78c8",
-            "firstName": "Heba",
-            "lastName": "Test",
-            "email": "testewfc@gmail.com",
-            "mobile": "+970597044345",
-            "verifiedEmail": true,
-            "verifiedMobile": true,
-            "isBlocked": false,
-            "role": 0,
-            "balance": 1000,
-            "lastLoginIP": "192.158.1.38",
-            "profit": 100,
-            "revenue": 200,
-            "lastLogin": "2022-10-12T06:00:12.261Z",
-            "createdAt": "2022-10-01T08:16:34.315Z",
-            "updatedAt": "2022-10-12T06:02:26.563Z"
-        }
- */
+
+class Transfers {
+  final Map bank;
+  final Map cash;
+  Transfers({required this.bank, required this.cash});
+
+  factory Transfers.fromJson(Map<String, dynamic> map) {
+    return Transfers(bank: map["bank"], cash: map["cash"]);
+  }
+}

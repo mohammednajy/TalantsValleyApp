@@ -13,6 +13,10 @@ class FormValidation extends ChangeNotifier {
     "address2": null,
     "city": null,
     "country": null,
+    "balance": null,
+    "revenue": null,
+    "profit": null,
+
   };
 
   setErrorMessage(String key, String? value) {

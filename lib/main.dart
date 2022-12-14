@@ -11,7 +11,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:device_preview/device_preview.dart';
 // ignore: depend_on_referenced_packages
 import 'package:provider/provider.dart';
-import 'package:tanlants_valley_application/view/screens/home/bnb_pages/user_management_page/edit_user_screen.dart';
 
 import 'data/controller/user_management_controller/user_details_controller.dart';
 
@@ -22,6 +21,7 @@ void main(List<String> args) async {
     ChangeNotifierProvider(
       create: (context) => AuthController(),
     ),
+    
     ChangeNotifierProvider(
       create: (context) => FormValidation(),
     ),
@@ -45,10 +45,9 @@ class TalantsValleyApp extends StatelessWidget {
         builder: (context, child) => MaterialApp(
           scaffoldMessengerKey: UtilsConfig.scaffoldKey,
           debugShowCheckedModeBanner: false,
-          initialRoute: ScreenName.splashScreen,
+          initialRoute: ScreenName.transfersScreen,
           onGenerateRoute: onGenerateRoute,
           navigatorKey: AppRouter.navigationKey,
-          // home: FilePickerDemo(),
           theme: lightTheme,
         ),
       ),

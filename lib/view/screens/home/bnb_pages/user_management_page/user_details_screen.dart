@@ -1,10 +1,11 @@
-import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:tanlants_valley_application/data/models/user_details_model.dart';
+import 'package:tanlants_valley_application/router/router.dart';
+import 'package:tanlants_valley_application/router/routes_name.dart';
 import 'package:tanlants_valley_application/utils/constant_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:tanlants_valley_application/view/screens/home/bnb_pages/user_management_page/approval_screen.dart';
@@ -12,71 +13,27 @@ import 'package:tanlants_valley_application/view/screens/home/bnb_pages/user_man
 
 import '../../../../../data/controller/counrty_controller.dart';
 import '../../../../../data/controller/user_management_controller/user_details_controller.dart';
+import '../../../../../storage/sherd_perf.dart';
 
 class UserDetailsScreen extends StatefulWidget {
   const UserDetailsScreen({
     super.key,
-    // this.userData,
   });
-  // final UserDetailsModel? userData;
 
   @override
   State<UserDetailsScreen> createState() => _UserDetailsScreenState();
 }
 
 class _UserDetailsScreenState extends State<UserDetailsScreen> {
-  List<String> updatesInfo = [
-    "Created",
-    "Last Login",
-    "Phone",
-    "IP",
-    "Transfers",
-  ];
-  List<String> financialInfo = [
-    "Balance",
-    "Revenue",
-    "Profit",
-  ];
-
-  // Map<String, String> personalInfo = {
-  //   "Full Name": '${userDetails.firstName} ${userDetails.lastName}',
-  //   "Email": userDetails.email,
-  //   "Phone": userDetails.mobile.toString(),
-  //   "ID":
-  //       ' ${userDetails.verifiedId["idNumber"]} (${userDetails.verifiedId["idDocumentType"]}) ',
-  //   "Address":
-  //       '${userDetails.address!["address1"]}-${userDetails.address!["city"]}-${userDetails.address!["country"]}',
-  //   "Role": userDetails.role == 0 ? 'User' : 'Team'
-  // };
   @override
   Widget build(BuildContext context) {
+    print(context.watch<UserDetailsController>().userTransfer?.cash ?? '');
+    print(context.watch<UserDetailsController>().userTransfer?.bank ?? '');
+
     return Consumer<UserDetailsController>(
       builder: (context, userDetails, child) => Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          centerTitle: true,
-          toolbarHeight: 80,
-          title: Text(
-            userDetails.userDetailsInfo!.firstName,
-            style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w500,
-                ),
-          ),
-          leading: IconButton(
-            padding: const EdgeInsets.only(left: 20),
-            alignment: Alignment.centerRight,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-              size: 25,
-            ),
-          ),
-        ),
+        appBar:
+            CustomAppBarWithBack(title: userDetails.userDetailsInfo!.firstName),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
@@ -120,59 +77,86 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                       addVerticalSpace(10),
                       RowInfoWidget(
                         leadingText: 'ID',
-                        trailingWidget: RichTextDetailsWidget(
-                          //  "status": "not_uploaded"
-                          firstText: userDetails
-                                  .userDetailsInfo!.verifiedId["idNumber"] ??
-                              ' - - - - - - ',
-                          secoundText: userDetails
-                                      .userDetailsInfo!.verifiedId["status"] !=
-                                  "approved"
-                              ? ''
-                              : ' (${userDetails.userDetailsInfo!.verifiedId["idDocumentType"].toString().replaceAll('_', ' ').toUpperCase()})',
-                          thirdText: userDetails
-                                      .userDetailsInfo!.verifiedId["status"] !=
-                                  "approved"
-                              ? true
-                              : false,
-                          // ID Approval
-                          onTapApproval: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const ApprovalScreen(
-                                    type: "id",
+                        trailingWidget:
+                            userDetails.userDetailsInfo!.verifiedId["status"] ==
+                                    "not_uploaded"
+                                ? const Text('Not Uplodaded')
+                                : RichTextDetailsWidget(
+                                    firstText:
+                                        '${userDetails.userDetailsInfo!.verifiedId["idNumber"] ?? ''} ',
+                                    secoundText: userDetails.userDetailsInfo
+                                                ?.verifiedId["status"] ==
+                                            "approved"
+                                        ? '  approved'
+                                        : userDetails.userDetailsInfo
+                                                    ?.verifiedId["status"] ==
+                                                "rejected"
+                                            ? 'Rejected '
+                                            : userDetails.userDetailsInfo
+                                                ?.verifiedId["idDocumentType"]
+                                                .toString()
+                                                .toUpperCase()
+                                                .replaceAll("_", " "),
+                                    thirdText: (userDetails.userDetailsInfo!
+                                                    .verifiedId["status"] ==
+                                                "approved" ||
+                                            userDetails.userDetailsInfo!
+                                                    .verifiedId["status"] ==
+                                                "rejected")
+                                        ? false
+                                        : true,
+                                    // ID Approval
+                                    onTapApproval: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const ApprovalScreen(
+                                              type: "id",
+                                            ),
+                                          ));
+                                    },
                                   ),
-                                ));
-                          },
-                        ),
                       ),
                       addVerticalSpace(10),
                       RowInfoWidget(
                         leadingText: 'Address',
-                        trailingWidget: RichTextDetailsWidget(
-                            firstText: userDetails.userDetailsInfo!
-                                        .address!["address1"] ==
-                                    null
-                                ? userDetails
-                                        .userDetailsInfo!.address!["country"] ??
-                                    ''
-                                : '${userDetails.userDetailsInfo!.address!["address1"] ?? ''} - ${userDetails.userDetailsInfo!.address!["city"] ?? ''} - ${userDetails.userDetailsInfo!.address!["country"] ?? ''}',
-                            secoundText: '',
-                            thirdText: userDetails.userDetailsInfo!
-                                        .verificationAddress["status"] !=
-                                    "approved"
-                                ? true
-                                : false,
-                            onTapApproval: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const ApprovalScreen(
-                                      type: "address",
-                                    ),
-                                  ));
-                            }),
+                        trailingWidget: userDetails.userDetailsInfo!
+                                    .verificationAddress["status"] ==
+                                "not_uploaded"
+                            ? const Text('Not Uplodaded')
+                            : RichTextDetailsWidget(
+                                firstText:
+                                    '${userDetails.userDetailsInfo?.address!["address1"] ?? ''} - ${userDetails.userDetailsInfo?.address!["country"] ?? ''}',
+                                secoundText: userDetails.userDetailsInfo
+                                            ?.verificationAddress["status"] ==
+                                        "approved"
+                                    ? '  approved'
+                                    : userDetails.userDetailsInfo
+                                                    ?.verificationAddress[
+                                                "status"] ==
+                                            "rejected"
+                                        ? " Rejected"
+                                        : '',
+                                thirdText: (userDetails.userDetailsInfo!
+                                                    .verificationAddress[
+                                                "status"] ==
+                                            "approved" ||
+                                        userDetails.userDetailsInfo!
+                                                .verificationAddress["status"] ==
+                                            "rejected")
+                                    ? false
+                                    : true,
+                                onTapApproval: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ApprovalScreen(
+                                          type: "address",
+                                        ),
+                                      ));
+                                }),
                       ),
                       addVerticalSpace(10),
                       RowInfoWidget(
@@ -206,15 +190,54 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                     ),
                     addVerticalSpace(10),
                     RowInfoWidget(
-                      leadingText: 'IP',
-                      trailingWidget: RichTextDetailsWidget(
-                          firstText: userDetails.userDetailsInfo!.lastLoginIP ??
-                              'No IP'),
-                    ),
+                        leadingText: 'IP',
+                        trailingWidget: GestureDetector(
+                          onTap: () {
+                            context.read<UserDetailsController>().userIP(
+                                token: SharedPrefController()
+                                    .getUser()
+                                    .accessToken,
+                                id: userDetails.userDetailsInfo!.id);
+                          },
+                          child: Text(
+                            userDetails.userDetailsInfo!.lastLoginIP ?? 'No IP',
+                            style: const TextStyle(
+                                decoration: TextDecoration.underline,
+                                decorationStyle: TextDecorationStyle.dashed,
+                                decorationColor: Colors.blue,
+                                decorationThickness: 3),
+                          ),
+                        )),
                     addVerticalSpace(10),
-                    const RowInfoWidget(
+                    RowInfoWidget(
                         leadingText: 'Transfers',
-                        trailingWidget: Text('no tranfer')),
+                        trailingWidget: Column(
+                          children: [
+                            CustomTransferWidget(
+                              title: 'Bank',
+                              data: userDetails.userTransfer!.bank.isEmpty
+                                  ? "add"
+                                  : '${userDetails.userTransfer?.bank["bank"]["bankName"] ?? ''}',
+                              onTap: () {
+                                AppRouter.goTo(ScreenName.transfersScreen);
+                              },
+                              onTapAdd: userDetails.userTransfer!.bank.isEmpty
+                                  ? () {
+                                      AppRouter.goTo(ScreenName.addBankScreen);
+                                    }
+                                  : null,
+                            ),
+                            CustomTransferWidget(
+                              title: 'Cash',
+                              data: userDetails.userTransfer!.cash.isEmpty
+                                  ? " "
+                                  : '${userDetails.userTransfer?.cash["office"]["name"] ?? ''}',
+                              onTap: () {
+                                AppRouter.goTo(ScreenName.transfersScreen);
+                              },
+                            ),
+                          ],
+                        )),
                   ],
                 ),
               ),
@@ -235,7 +258,10 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                                   .titleMedium!
                                   .copyWith(color: AppColor.anotherGrey)),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              AppRouter.goTo(
+                                  ScreenName.editFinancialInfoScreen);
+                            },
                             icon: const Icon(
                               Icons.edit_outlined,
                               size: 20,
@@ -244,31 +270,24 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                         ],
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: financialInfo
-                            .map((e) => Column(
-                                  children: [
-                                    Text(
-                                      e,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(
-                                              fontSize: 13,
-                                              color: AppColor.anotherGrey),
-                                    ),
-                                    addVerticalSpace(5),
-                                    Text('\$1000',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                                fontSize: 13,
-                                                color: AppColor.black))
-                                  ],
-                                ))
-                            .toList(),
-                      ),
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ColumCustomFinancial(
+                                title: 'Balance',
+                                data: userDetails.userDetailsInfo?.balance
+                                        .toString() ??
+                                    ''),
+                            ColumCustomFinancial(
+                                title: 'Revenue',
+                                data: userDetails.userDetailsInfo?.revenue
+                                        .toString() ??
+                                    ''),
+                            ColumCustomFinancial(
+                                title: 'Profit',
+                                data: userDetails.userDetailsInfo?.profit
+                                        .toString() ??
+                                    ''),
+                          ]),
                     ],
                   ),
                 ),
@@ -278,6 +297,124 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class CustomAppBarWithBack extends StatelessWidget
+    implements PreferredSizeWidget {
+  const CustomAppBarWithBack({
+    required this.title,
+    Key? key,
+  }) : super(key: key);
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      centerTitle: true,
+      toolbarHeight: 80,
+      title: Text(
+        title,
+        style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+              fontSize: 25,
+              fontWeight: FontWeight.w500,
+            ),
+      ),
+      leading: IconButton(
+        padding: const EdgeInsets.only(left: 20),
+        alignment: Alignment.centerRight,
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        icon: const Icon(
+          Icons.arrow_back_ios,
+          color: Colors.black,
+          size: 25,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => Size.fromHeight(90);
+}
+
+class CustomTransferWidget extends StatelessWidget {
+  const CustomTransferWidget({
+    required this.title,
+    required this.data,
+    required this.onTap,
+    this.onTapAdd,
+    Key? key,
+  }) : super(key: key);
+  final String title;
+  final String data;
+  final void Function()? onTap;
+  final void Function()? onTapAdd;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: GestureDetector(
+            onTap: onTap,
+            child: Text(
+              title,
+              style: TextStyle(
+                  decoration: TextDecoration.underline,
+                  decorationStyle: TextDecorationStyle.dashed,
+                  decorationColor: Colors.blue,
+                  decorationThickness: 3),
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: GestureDetector(
+            onTap: onTapAdd,
+            child: Text(data,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(fontSize: 11, color: AppColor.anotherGrey)),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class ColumCustomFinancial extends StatelessWidget {
+  const ColumCustomFinancial({
+    required this.title,
+    required this.data,
+    Key? key,
+  }) : super(key: key);
+  final String title;
+  final String data;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          title,
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium!
+              .copyWith(fontSize: 13, color: AppColor.anotherGrey),
+        ),
+        addVerticalSpace(5),
+        Text('\$$data',
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium!
+                .copyWith(fontSize: 13, color: AppColor.black))
+      ],
     );
   }
 }
@@ -363,7 +500,6 @@ class RichTextDetailsWidget extends StatelessWidget {
     return RichText(
       text: TextSpan(
         text: firstText,
-        recognizer: TapGestureRecognizer()..onTap = onTapApproval,
         style: const TextStyle(
           color: Colors.transparent,
           shadows: [Shadow(color: Colors.black, offset: Offset(-1, -3))],
@@ -383,7 +519,8 @@ class RichTextDetailsWidget extends StatelessWidget {
           thirdText
               ? TextSpan(
                   text: ' Not Verified',
-                  style: TextStyle(
+                  recognizer: TapGestureRecognizer()..onTap = onTapApproval,
+                  style: const TextStyle(
                       shadows: [
                         Shadow(color: Colors.red, offset: Offset(-1, -3))
                       ],

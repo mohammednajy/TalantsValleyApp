@@ -7,25 +7,25 @@ import '../../../utils/constant_utils.dart';
 import '../../../utils/validation.dart';
 
 class TextFormFieldWidget extends StatefulWidget {
-  const TextFormFieldWidget({
-    super.key,
-    required this.title,
-    this.hintText,
-    this.validator,
-    this.textKey,
-    this.textInputType,
-    this.obscureIcon = false,
-    this.leftBorder = false,
-    this.textInputAction = TextInputAction.next,
-    this.prefixIcon,
-    this.maxLength,
-    this.overAllValidatin = false,
-    required this.controller,
-    required this.focusNode,
-    required this.messageKey,
-    required this.messageValue,
-    this.showStrongMessage = false,
-  });
+  const TextFormFieldWidget(
+      {super.key,
+      required this.title,
+      this.hintText,
+      this.validator,
+      this.textKey,
+      this.textInputType,
+      this.obscureIcon = false,
+      this.leftBorder = false,
+      this.textInputAction = TextInputAction.next,
+      this.prefixIcon,
+      this.maxLength,
+      this.overAllValidatin = false,
+      required this.controller,
+      required this.focusNode,
+      required this.messageKey,
+      required this.messageValue,
+      this.showStrongMessage = false,
+      this.autovalidateMode = AutovalidateMode.onUserInteraction});
   final TextEditingController controller;
   final FocusNode focusNode;
   final Function messageValue;
@@ -42,6 +42,7 @@ class TextFormFieldWidget extends StatefulWidget {
   final int? maxLength;
   final Key? textKey;
   final bool showStrongMessage;
+  final AutovalidateMode? autovalidateMode;
   @override
   State<TextFormFieldWidget> createState() => _TextFormFieldWidgetState();
 }
@@ -71,7 +72,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
         ),
         Consumer<FormValidation>(
           builder: (context, errorProvider, child) => TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
+            autovalidateMode: widget.autovalidateMode,
             focusNode: widget.focusNode,
             key: widget.textKey,
             maxLength: widget.maxLength,

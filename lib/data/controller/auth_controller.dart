@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tanlants_valley_application/data/controller/form_validation.dart';
 import 'package:tanlants_valley_application/data/models/user_model.dart';
@@ -12,7 +11,7 @@ import 'package:tanlants_valley_application/view/screens/auth/forget_screen/new_
 import 'package:tanlants_valley_application/view/screens/auth/forget_screen/otp_email_screen.dart';
 import 'package:provider/provider.dart';
 
-class AuthController extends ChangeNotifier {
+class AuthController with ChangeNotifier {
   bool loading = false;
   String errorMessage = "";
   bool cnacelResendLoading = false;
@@ -28,7 +27,9 @@ class AuthController extends ChangeNotifier {
         UtilsConfig.showSnackBarMessage(
             message: response.data["message"], status: true);
         SharedPrefController().save(UserModel.fromJson(response.data["data"]));
-        AppRouter.goAndRemove(ScreenName.verificationScreen);
+        SharedPrefController().getUser().userInfo.role == 0
+            ? AppRouter.goAndRemove(ScreenName.verificationScreen)
+            : AppRouter.goAndRemove(ScreenName.homeScreen);
       }
     }
   }
@@ -69,7 +70,6 @@ class AuthController extends ChangeNotifier {
   sendOtpCode({required String id, required String code}) async {
     final Response response = await AuthApi.sendOtpCode(id: id, code: code);
     if (response.data["statusCode"] == 200) {
-     
       Navigator.push(
         AppRouter.navigationKey.currentContext!,
         MaterialPageRoute(

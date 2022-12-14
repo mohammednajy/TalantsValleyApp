@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tanlants_valley_application/data/controller/auth_controller.dart';
 import 'package:tanlants_valley_application/router/router.dart';
 import 'package:tanlants_valley_application/router/routes_name.dart';
@@ -94,7 +93,7 @@ class _SignInFormWidgetState extends State<SignInFormWidget> {
             addVerticalSpace(60),
             ButtonWidget(
                 text: 'Sign In',
-                visible: authProvider.loading,
+                visible: context.watch<AuthController>().loading,
                 onPressed: () {
                   authProvider.login(
                       email: emailController.text,

@@ -15,4 +15,10 @@ class ScreenName {
   static const String homeScreen = "home_screen";
   static const String detailsManagementScreen = "details_management_page";
   static const String userManagementPage = "user_management_page";
+  static const String userDetailsScreen = "user_details_screen";
+  static const String userIPScreen = "user_ip_screen";
+  static const String editFinancialInfoScreen = "edit_financial_info_screen";
+  static const String transfersScreen = "transfers_screen";
+  static const String addBankScreen = "add_bank_screen";
+
 }

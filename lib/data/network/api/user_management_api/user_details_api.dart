@@ -80,10 +80,41 @@ class UserDetailsApi {
         data: {
           "type": type,
           "isApproved": false,
-          "disapproveReason": {
-            "reason": reason,
-            "note": note
-          }
+          "disapproveReason": {"reason": reason, "note": note}
         });
+  }
+
+  static Future<Response> userIP({
+    required String token,
+    required String id,
+  }) async {
+    return await BaseClientHelper().get('${EndPoints.userIP}$id',
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+          },
+        ));
+  }
+
+  static Future<Response> editFinancialInfo({
+    required String token,
+    required String id,
+    required int profit,
+    required int balance,
+    required int revenue,
+  }) async {
+    return await BaseClientHelper().put(
+      '${EndPoints.editFinancialInfo}$id',
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      ),
+      data: {
+        "profit": profit,
+        "balance": balance,
+        "revenue": revenue,
+      },
+    );
   }
 }
