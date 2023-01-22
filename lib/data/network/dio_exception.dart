@@ -17,6 +17,7 @@ class DioExceptions implements Exception {
         message = "Receive timeout in connection with API server";
         break;
       case DioErrorType.response:
+        print('dddddddd ${dioError.message}');
         message = _handleError(
           dioError.response?.statusCode,
           dioError.response?.data,
@@ -26,6 +27,7 @@ class DioExceptions implements Exception {
         message = "Send timeout in connection with API server";
         break;
       case DioErrorType.other:
+        print(dioError.response);
         if (dioError.message.contains("SocketException")) {
           message = 'No Internet';
           break;

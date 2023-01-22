@@ -132,9 +132,10 @@ Route onGenerateRoute(RouteSettings settings) {
       result = const EditFinancialInfoScreen();
       break;
     case ScreenName.transfersScreen:
-      result = ChangeNotifierProvider(
-        create: (context) => TransfersController(),
-        child: const TransfersScreen());
+      final arg = settings.arguments != null ? settings.arguments as int : 0;
+      result = TransfersScreen(
+        initialIndex: arg,
+      );
       break;
     case ScreenName.addBankScreen:
       result = const AddBankScreen();

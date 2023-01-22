@@ -1,11 +1,8 @@
-import 'dart:async';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:tanlants_valley_application/data/models/user_details_model.dart';
 import 'package:tanlants_valley_application/router/router.dart';
-// ignore: depend_on_referenced_packages
-import 'package:provider/provider.dart';
+
 import 'package:tanlants_valley_application/router/routes_name.dart';
 import 'package:tanlants_valley_application/utils/helper.dart';
 import '../../../view/screens/home/bnb_pages/user_management_page/user_details_screen.dart';

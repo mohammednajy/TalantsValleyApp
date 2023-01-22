@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tanlants_valley_application/data/controller/auth_controller.dart';
 import 'package:tanlants_valley_application/data/controller/form_validation.dart';
+import 'package:tanlants_valley_application/data/controller/user_management_controller/transfers_controller.dart';
+import 'package:tanlants_valley_application/data/network/api/locator/serviceLocator.dart';
 import 'package:tanlants_valley_application/router/route_genarator.dart';
 import 'package:tanlants_valley_application/router/router.dart';
 import 'package:tanlants_valley_application/router/routes_name.dart';
@@ -16,17 +18,20 @@ import 'data/controller/user_management_controller/user_details_controller.dart'
 
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
+  setUp();
   await SharedPrefController().init();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
       create: (context) => AuthController(),
     ),
-    
     ChangeNotifierProvider(
       create: (context) => FormValidation(),
     ),
     ChangeNotifierProvider(
       create: (context) => UserDetailsController(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => TransfersController(),
     ),
   ], child: const TalantsValleyApp()));
 }
@@ -45,7 +50,7 @@ class TalantsValleyApp extends StatelessWidget {
         builder: (context, child) => MaterialApp(
           scaffoldMessengerKey: UtilsConfig.scaffoldKey,
           debugShowCheckedModeBanner: false,
-          initialRoute: ScreenName.transfersScreen,
+          initialRoute: ScreenName.splashScreen,
           onGenerateRoute: onGenerateRoute,
           navigatorKey: AppRouter.navigationKey,
           theme: lightTheme,
@@ -54,3 +59,5 @@ class TalantsValleyApp extends StatelessWidget {
     );
   }
 }
+// flutter pub add csc_picker
+// international_phone_input: 

@@ -9,9 +9,10 @@ class AppRouter {
         .pushNamedAndRemoveUntil(screenName, (route) => false);
   }
 
-  static goTo(String screenName) {
-    navigationKey.currentState!.pushNamed(screenName);
+  static goTo(String screenName,{ Object? object}) {
+    navigationKey.currentState!.pushNamed(screenName, arguments: object);
   }
+
   static back() {
     navigationKey.currentState!.pop();
   }

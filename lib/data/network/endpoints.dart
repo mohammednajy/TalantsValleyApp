@@ -39,7 +39,10 @@ class EndPoints {
   static const String userApprove = '$baseUrl/team/user/approve/';
   static const String userIP = '$baseUrl/team/user/ip-records/';
   static const String editFinancialInfo = '$baseUrl/team/user/financial/';
- 
- 
+
+// for user transfer
+  static const String getTansferBankCash = '$baseUrl/team/user/transfer-payouts/';
+  static const String addBankAccount = '$baseUrl/team/user/add-bank';
+
   static const int receiveTimeout = 35000;
 }

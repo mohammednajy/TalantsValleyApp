@@ -75,7 +75,7 @@ class _UserManagementPageState extends State<UserManagementPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
+        padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Consumer<UserManagementController>(
           builder: (context, userProvider, child) => Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -174,7 +174,6 @@ class _UserManagementPageState extends State<UserManagementPage> {
                                     borderRadius: BorderRadius.circular(10)),
                                 child: ListTile(
                                     onTap: () {
-                                    
                                       context
                                           .read<UserDetailsController>()
                                           .userDetails(
